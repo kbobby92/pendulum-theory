@@ -1,0 +1,3295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Pendulum of Authority</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --gold-dim: #7a6230;
+    --ink: #0e0c0a;
+    --parchment: #f5efe0;
+    --parchment-dark: #e8ddc8;
+    --red-deep: #8b1a1a;
+    --blue-deep: #1a2e5c;
+    --stone: #3a3530;
+    --ash: #c8bfaf;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--ink);
+    color: var(--parchment);
+    font-family: 'EB Garamond', serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Textured background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 90%, rgba(139,26,26,0.08) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 40px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .header-ornament {
+    color: var(--gold);
+    font-size: 1.2rem;
+    letter-spacing: 6px;
+    opacity: 0.6;
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    color: var(--gold-light);
+    text-shadow: 0 0 40px rgba(201,168,76,0.3);
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+
+  .subtitle {
+    font-size: 1.15rem;
+    color: var(--ash);
+    font-style: italic;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 40px 0;
+    opacity: 0.4;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold));
+  }
+  .divider::after { background: linear-gradient(to left, transparent, var(--gold)); }
+  .divider span { color: var(--gold); font-size: 1.2rem; }
+
+  /* Pendulum SVG Container */
+  .pendulum-section {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 4px;
+    padding: 40px 20px 20px;
+    margin-bottom: 50px;
+    position: relative;
+  }
+
+  .pendulum-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    color: var(--gold-dim);
+    text-align: center;
+    width: 100%;
+    display: block;
+    margin: 0 auto 20px;
+    text-transform: uppercase;
+  }
+
+  svg.diagram {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Archetype Cards */
+  .archetypes-section {
+    margin-bottom: 50px;
+  }
+
+  .section-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .archetypes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .archetype-card {
+    border: 1px solid rgba(201,168,76,0.2);
+    border-top: 3px solid;
+    padding: 24px;
+    background: rgba(255,255,255,0.02);
+    transition: background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .archetype-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .archetype-card:hover {
+    background: rgba(255,255,255,0.04);
+  }
+
+  .card-position {
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-family: 'Cinzel', serif;
+  }
+
+  .card-name {
+    font-family: 'Cinzel', serif;
+    font-size: 1.25rem;
+    color: var(--gold-light);
+    margin-bottom: 4px;
+  }
+
+  .card-era {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--ash);
+    margin-bottom: 14px;
+    opacity: 0.7;
+  }
+
+  .card-body {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #d4c9b5;
+  }
+
+  .card-examples {
+    margin-top: 12px;
+    font-size: 0.8rem;
+    color: var(--gold-dim);
+    font-family: 'Cinzel', serif;
+    letter-spacing: 1px;
+  }
+
+  .card-trigger {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(201,168,76,0.1);
+    font-size: 0.85rem;
+    font-style: italic;
+    color: #a09080;
+  }
+
+  /* Written Breakdown */
+  .breakdown-section {
+    border-left: 2px solid rgba(201,168,76,0.3);
+    padding-left: 30px;
+    margin-bottom: 50px;
+  }
+
+  .breakdown-section h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    color: var(--gold);
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+
+  .breakdown-section p {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #d0c4b0;
+    margin-bottom: 16px;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--gold-dim);
+    font-family: 'Cinzel', serif;
+    letter-spacing: 2px;
+    padding-top: 30px;
+    border-top: 1px solid rgba(201,168,76,0.1);
+  }
+
+  /* Pendulum animation */
+  @keyframes swing {
+    0%   { transform: rotate(-22deg); }
+    50%  { transform: rotate(22deg); }
+    100% { transform: rotate(-22deg); }
+  }
+
+  .pendulum-group {
+    animation: swing 5s ease-in-out infinite;
+    transform-origin: 500px 104px;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="header-ornament">✦ ✦ ✦</div>
+    <h1>The Pendulum of Authority</h1>
+    <p class="subtitle">A theory of political archetypes as shaped by the forces of civilization — institutions, crises, and the spirit of mankind</p>
+  </div>
+
+  <div class="divider"><span>⚖</span></div>
+
+  <!-- SVG Diagram -->
+  <div class="pendulum-section">
+    <div class="pendulum-label">The Diagram of Forces</div>
+    <svg class="diagram" viewBox="0 0 1100 920" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Spectrum gradient -->
+        <linearGradient id="spectrumGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%"   stop-color="#8b1a1a" stop-opacity="0.9"/>
+          <stop offset="16%"  stop-color="#c07a20" stop-opacity="0.85"/>
+          <stop offset="33%"  stop-color="#6b8c3e" stop-opacity="0.85"/>
+          <stop offset="50%"  stop-color="#3a7a6a" stop-opacity="0.85"/>
+          <stop offset="66%"  stop-color="#2a5080" stop-opacity="0.85"/>
+          <stop offset="83%"  stop-color="#5a2a80" stop-opacity="0.85"/>
+          <stop offset="100%" stop-color="#1a0a0a" stop-opacity="0.95"/>
+        </linearGradient>
+        <linearGradient id="barGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#c9a84c"/>
+          <stop offset="100%" stop-color="#7a6230"/>
+        </linearGradient>
+        <linearGradient id="pillarBlack" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#1a1510"/>
+          <stop offset="40%" stop-color="#3a3028"/>
+          <stop offset="60%" stop-color="#4a4038"/>
+          <stop offset="100%" stop-color="#1a1510"/>
+        </linearGradient>
+        <linearGradient id="pillarWhite" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#8a8070"/>
+          <stop offset="40%" stop-color="#d8cdb8"/>
+          <stop offset="60%" stop-color="#e8ddc8"/>
+          <stop offset="100%" stop-color="#8a8070"/>
+        </linearGradient>
+        <linearGradient id="machGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%"   stop-color="rgba(140,100,20,0.2)"/>
+          <stop offset="25%"  stop-color="rgba(180,130,30,0.4)"/>
+          <stop offset="50%"  stop-color="rgba(210,160,40,0.7)"/>
+          <stop offset="75%"  stop-color="rgba(180,130,30,0.4)"/>
+          <stop offset="100%" stop-color="rgba(140,100,20,0.2)"/>
+        </linearGradient>
+        <linearGradient id="machBarGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%"   stop-color="rgba(80,50,10,0.3)"/>
+          <stop offset="50%"  stop-color="rgba(160,100,20,0.6)"/>
+          <stop offset="100%" stop-color="rgba(80,50,10,0.3)"/>
+        </linearGradient>
+        <radialGradient id="sacredBg" cx="50%" cy="38%" r="45%">
+          <stop offset="0%" stop-color="rgba(201,168,76,0.07)"/>
+          <stop offset="100%" stop-color="rgba(201,168,76,0)"/>
+        </radialGradient>
+        <filter id="eyeglow">
+          <feGaussianBlur stdDeviation="8" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="serpentglow">
+          <feGaussianBlur stdDeviation="5" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="softglow">
+          <feGaussianBlur stdDeviation="6" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <marker id="arrowRed" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+          <path d="M0,0 L0,8 L8,4 z" fill="rgba(139,26,26,0.7)"/>
+        </marker>
+        <marker id="arrowBlue" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+          <path d="M0,0 L0,8 L8,4 z" fill="rgba(26,46,92,0.7)"/>
+        </marker>
+
+      </defs>
+
+      <!-- Radial glow -->
+      <rect x="0" y="0" width="1000" height="860" fill="url(#sacredBg)"/>
+
+      <!-- ══ FLOWER OF LIFE — sacred geometry background ══ -->
+      <g opacity="0.065" stroke="#c9a84c" stroke-width="0.8" fill="none">
+        <circle cx="500" cy="220" r="80"/>
+        <circle cx="500" cy="140" r="80"/>
+        <circle cx="569" cy="180" r="80"/>
+        <circle cx="569" cy="260" r="80"/>
+        <circle cx="500" cy="300" r="80"/>
+        <circle cx="431" cy="260" r="80"/>
+        <circle cx="431" cy="180" r="80"/>
+        <circle cx="500" cy="60"  r="80"/>
+        <circle cx="638" cy="140" r="80"/>
+        <circle cx="638" cy="300" r="80"/>
+        <circle cx="500" cy="380" r="80"/>
+        <circle cx="362" cy="300" r="80"/>
+        <circle cx="362" cy="140" r="80"/>
+        <circle cx="500" cy="220" r="160"/>
+      </g>
+      <!-- Star of David / Hexagram -->
+      <g opacity="0.055" stroke="#c9a84c" stroke-width="1" fill="none">
+        <polygon points="500,70 638,305 362,305"/>
+        <polygon points="500,370 362,135 638,135"/>
+      </g>
+
+      <!-- Vertical axis -->
+      <line x1="500" y1="0" x2="500" y2="860" stroke="rgba(201,168,76,0.04)" stroke-width="1" stroke-dasharray="4,12"/>
+
+      <!-- ══ BOAZ — LEFT PILLAR (Dark / Strength) ══ -->
+      <rect x="28" y="110" width="44" height="555" fill="url(#pillarBlack)" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+      <line x1="38" y1="110" x2="38" y2="665" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+      <line x1="47" y1="110" x2="47" y2="665" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+      <line x1="56" y1="110" x2="56" y2="665" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+      <line x1="63" y1="110" x2="63" y2="665" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+      <rect x="20" y="660" width="60" height="16" rx="2" fill="url(#pillarBlack)" stroke="rgba(201,168,76,0.35)" stroke-width="1"/>
+      <rect x="14" y="673" width="72" height="10" rx="2" fill="url(#pillarBlack)" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+      <rect x="20" y="96"  width="60" height="16" rx="2" fill="url(#pillarBlack)" stroke="rgba(201,168,76,0.35)" stroke-width="1"/>
+      <rect x="14" y="84"  width="72" height="14" rx="2" fill="url(#pillarBlack)" stroke="rgba(201,168,76,0.25)" stroke-width="1"/>
+      <circle cx="50" cy="66" r="16" fill="rgba(20,15,10,0.9)" stroke="rgba(201,168,76,0.5)" stroke-width="1.5"/>
+      <ellipse cx="50" cy="66" rx="16" ry="5" fill="none" stroke="rgba(201,168,76,0.3)" stroke-width="0.8"/>
+      <line x1="50" y1="50" x2="50" y2="82" stroke="rgba(201,168,76,0.3)" stroke-width="0.8"/>
+      <text x="50" y="102" text-anchor="middle" fill="rgba(201,168,76,0.55)" font-family="Cinzel, serif" font-size="7" letter-spacing="2">BOAZ</text>
+      
+
+      <!-- ══ JACHIN — RIGHT PILLAR (Light / Establishment) ══ -->
+      <rect x="928" y="110" width="44" height="555" fill="url(#pillarWhite)" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+      <line x1="937" y1="110" x2="937" y2="665" stroke="rgba(255,255,255,0.09)" stroke-width="1"/>
+      <line x1="946" y1="110" x2="946" y2="665" stroke="rgba(255,255,255,0.09)" stroke-width="1"/>
+      <line x1="955" y1="110" x2="955" y2="665" stroke="rgba(255,255,255,0.09)" stroke-width="1"/>
+      <line x1="963" y1="110" x2="963" y2="665" stroke="rgba(255,255,255,0.09)" stroke-width="1"/>
+      <rect x="920" y="660" width="60" height="16" rx="2" fill="url(#pillarWhite)" stroke="rgba(201,168,76,0.35)" stroke-width="1"/>
+      <rect x="914" y="673" width="72" height="10" rx="2" fill="url(#pillarWhite)" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+      <rect x="920" y="96"  width="60" height="16" rx="2" fill="url(#pillarWhite)" stroke="rgba(201,168,76,0.35)" stroke-width="1"/>
+      <rect x="914" y="84"  width="72" height="14" rx="2" fill="url(#pillarWhite)" stroke="rgba(201,168,76,0.25)" stroke-width="1"/>
+      <circle cx="950" cy="66" r="16" fill="rgba(200,185,150,0.35)" stroke="rgba(201,168,76,0.5)" stroke-width="1.5"/>
+      <ellipse cx="950" cy="66" rx="16" ry="5" fill="none" stroke="rgba(201,168,76,0.3)" stroke-width="0.8"/>
+      <line x1="950" y1="50" x2="950" y2="82" stroke="rgba(201,168,76,0.3)" stroke-width="0.8"/>
+      <text x="950" y="102" text-anchor="middle" fill="#3a2e10" font-family="Cinzel, serif" font-size="7" letter-spacing="2" font-weight="600">JACHIN</text>
+      <text transform="rotate(90,984,390)" x="984" y="-606" text-anchor="middle" fill="rgba(201,168,76,0.18)" font-family="Cinzel, serif" font-size="7" letter-spacing="2">ESTABLISHMENT</text>
+
+      <!-- Mosaic floor suggestion at base -->
+      <g opacity="0.1">
+        <rect x="72" y="678" width="856" height="5" fill="none" stroke="rgba(201,168,76,0.5)" stroke-width="0.5"/>
+        <rect x="72"  y="678" width="22" height="5" fill="rgba(255,255,255,0.6)"/>
+        <rect x="116" y="678" width="22" height="5" fill="rgba(255,255,255,0.6)"/>
+        <rect x="160" y="678" width="22" height="5" fill="rgba(255,255,255,0.6)"/>
+        <rect x="204" y="678" width="22" height="5" fill="rgba(255,255,255,0.6)"/>
+        <rect x="248" y="678" width="22" height="5" fill="rgba(255,255,255,0.6)"/>
+        <rect x="292" y="678" width="22" height="5" fill="rgba(255,255,255,0.6)"/>
+        <rect x="336" y="678" width="22" height="5" fill="rgba(255,255,255,0.6)"/>
+        <rect x="380" y="678" width="22" height="5" fill="rgba(255,255,255,0.6)"/>
+        <rect x="424" y="678" width="22" height="5" fill="rgba(255,255,255,0.6)"/>
+        <rect x="468" y="678" width="22" height="5" fill="rgba(255,255,255,0.6)"/>
+        <rect x="512" y="678" width="22" height="5" fill="rgba(255,255,255,0.6)"/>
+        <rect x="556" y="678" width="22" height="5" fill="rgba(255,255,255,0.6)"/>
+        <rect x="600" y="678" width="22" height="5" fill="rgba(255,255,255,0.6)"/>
+        <rect x="644" y="678" width="22" height="5" fill="rgba(255,255,255,0.6)"/>
+        <rect x="688" y="678" width="22" height="5" fill="rgba(255,255,255,0.6)"/>
+        <rect x="732" y="678" width="22" height="5" fill="rgba(255,255,255,0.6)"/>
+        <rect x="776" y="678" width="22" height="5" fill="rgba(255,255,255,0.6)"/>
+        <rect x="820" y="678" width="22" height="5" fill="rgba(255,255,255,0.6)"/>
+        <rect x="864" y="678" width="22" height="5" fill="rgba(255,255,255,0.6)"/>
+      </g>
+
+      <!-- ══ EYE OF PROVIDENCE ══ -->
+      <!-- Triangle -->
+      <polygon points="500,10 554,96 446,96" fill="rgba(10,8,4,0.88)" stroke="#c9a84c" stroke-width="1.5" filter="url(#eyeglow)"/>
+      <polygon points="500,10 554,96 446,96" fill="none" stroke="rgba(255,240,160,0.18)" stroke-width="3.5"/>
+      <!-- Rays -->
+      <g stroke="rgba(201,168,76,0.22)" stroke-width="0.8">
+        <line x1="500" y1="10" x2="500" y2="0"/>
+        <line x1="554" y1="96" x2="566" y2="108"/>
+        <line x1="446" y1="96" x2="434" y2="108"/>
+        <line x1="472" y1="24" x2="460" y2="12"/>
+        <line x1="528" y1="24" x2="540" y2="12"/>
+        <line x1="544" y1="60" x2="558" y2="56"/>
+        <line x1="456" y1="60" x2="442" y2="56"/>
+        <line x1="518" y1="88" x2="524" y2="102"/>
+        <line x1="482" y1="88" x2="476" y2="102"/>
+        <line x1="500" y1="96" x2="500" y2="110"/>
+      </g>
+      <!-- Eye -->
+      <ellipse cx="500" cy="58" rx="27" ry="17" fill="rgba(240,225,180,0.12)" stroke="rgba(201,168,76,0.7)" stroke-width="1"/>
+      <circle cx="500" cy="58" r="11" fill="rgba(201,168,76,0.28)" stroke="rgba(201,168,76,0.85)" stroke-width="1"/>
+      <circle cx="500" cy="58" r="5.5" fill="rgba(255,230,100,0.92)" filter="url(#glow)"/>
+      <circle cx="497" cy="55" r="2" fill="rgba(255,255,255,0.7)"/>
+      <path d="M 473,58 Q 500,40 527,58" fill="none" stroke="rgba(201,168,76,0.55)" stroke-width="1"/>
+      <path d="M 473,58 Q 500,74 527,58" fill="none" stroke="rgba(201,168,76,0.55)" stroke-width="1"/>
+      <!-- Motto -->
+      <text x="500" y="8" text-anchor="middle" fill="rgba(201,168,76,0.45)" font-family="Cinzel, serif" font-size="9" letter-spacing="2">DEUS MEUMQUE JUS</text>
+
+      <!-- ══ FULCRUM ══ -->
+      <rect x="462" y="98" width="76" height="14" rx="2" fill="url(#barGrad)" opacity="0.9"/>
+      <circle cx="500" cy="104" r="7" fill="#c9a84c" filter="url(#glow)"/>
+      <circle cx="500" cy="104" r="3.5" fill="#f5efe0"/>
+      <text x="500" y="126" text-anchor="middle" fill="#c9a84c" font-family="Cinzel, serif" font-size="8.5" letter-spacing="2">FULCRUM</text>
+      <text x="500" y="137" text-anchor="middle" fill="#7a6230" font-family="EB Garamond, serif" font-size="8" font-style="italic">Spirit of Man / Current Events</text>
+
+      <!-- ══ PENDULUM (animated) ══ -->
+      <g class="pendulum-group">
+        <line x1="500" y1="104" x2="500" y2="345" stroke="url(#barGrad)" stroke-width="3" opacity="0.85"/>
+        <line x1="501" y1="104" x2="501" y2="345" stroke="rgba(255,240,180,0.22)" stroke-width="1"/>
+        <text transform="rotate(-90,516,224)" x="516" y="228" text-anchor="middle" fill="#7a6230" font-family="Cinzel, serif" font-size="7" letter-spacing="2">INSTITUTIONS</text>
+        <circle cx="500" cy="357" r="28" fill="rgba(20,15,10,0.92)" stroke="#c9a84c" stroke-width="2" filter="url(#softglow)"/>
+        <circle cx="500" cy="357" r="20" fill="rgba(201,168,76,0.12)" stroke="rgba(201,168,76,0.4)" stroke-width="1"/>
+        <circle cx="500" cy="357" r="10" fill="#c9a84c" opacity="0.8"/>
+        <circle cx="495" cy="352" r="3" fill="rgba(255,255,255,0.4)"/>
+        <!-- The People label -->
+        <text x="500" y="396" text-anchor="middle" fill="rgba(201,168,76,0.55)"
+              font-family="Cinzel, serif" font-size="7" letter-spacing="1.5">THE PEOPLE</text>
+      </g>
+      <!-- Swing arc -->
+      <path d="M 265,357 Q 500,268 735,357" fill="none" stroke="rgba(201,168,76,0.1)" stroke-width="1.5" stroke-dasharray="5,8"/>
+
+      <!-- Force arrows -->
+      <path d="M 400,255 Q 345,300 298,357" fill="none" stroke="rgba(139,26,26,0.45)" stroke-width="1.5" marker-end="url(#arrowRed)"/>
+      <path d="M 600,255 Q 655,300 702,357" fill="none" stroke="rgba(26,46,92,0.45)" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+      <text x="332" y="296" text-anchor="middle" fill="rgba(139,26,26,0.6)" font-family="EB Garamond, serif" font-size="8.5" font-style="italic">chaos / crisis</text>
+      <text x="668" y="296" text-anchor="middle" fill="rgba(100,130,200,0.6)" font-family="EB Garamond, serif" font-size="8.5" font-style="italic">order / fear</text>
+
+      <!-- ══════════════════════════════════════════════════════ -->
+
+      <!-- ══ ARROWS — explicit lines + polygons ══ -->
+      <!-- TOP ROW: both inward toward center (x=500) -->
+      <!-- Top-left: shaft →, tip → (pointing right toward center) -->
+      <line x1="388" y1="380" x2="456" y2="380" stroke="rgba(201,168,76,0.85)" stroke-width="2.5"/>
+      <polygon points="456,373 470,380 456,387" fill="rgba(201,168,76,0.95)"/>
+      <!-- Top-right: shaft ←, tip ← (pointing left toward center) -->
+      <line x1="612" y1="380" x2="544" y2="380" stroke="rgba(201,168,76,0.85)" stroke-width="2.5"/>
+      <polygon points="544,373 530,380 544,387" fill="rgba(201,168,76,0.95)"/>
+
+      <!-- BOTTOM ROW: both outward away from center -->
+      <!-- Bottom-left: shaft ←, tip ← (pointing left away from center) -->
+      <line x1="478" y1="502" x2="388" y2="502" stroke="rgba(201,168,76,0.65)" stroke-width="2.5"/>
+      <polygon points="388,495 374,502 388,509" fill="rgba(201,168,76,0.75)"/>
+      <!-- Bottom-right: shaft →, tip → (pointing right away from center) -->
+      <line x1="522" y1="502" x2="612" y2="502" stroke="rgba(201,168,76,0.65)" stroke-width="2.5"/>
+      <polygon points="612,495 626,502 612,509" fill="rgba(201,168,76,0.75)"/>
+
+      <!-- ══ POWER SPECTRUM BAR ══ -->
+      <rect x="100" y="415" width="800" height="38" rx="3" fill="url(#spectrumGrad)" opacity="0.92"/>
+      <rect x="100" y="415" width="800" height="38" rx="3" fill="none" stroke="rgba(201,168,76,0.5)" stroke-width="1"/>
+      <line x1="500" y1="410" x2="500" y2="457" stroke="rgba(201,168,76,0.5)" stroke-width="1" stroke-dasharray="3,3"/>
+
+      <text x="100" y="406" text-anchor="middle" fill="#8b1a1a" font-family="Cinzel, serif" font-size="9" letter-spacing="1" font-weight="600">◀ NO AUTHORITY</text>
+      <text x="900" y="406" text-anchor="middle" fill="#c9a84c" font-family="Cinzel, serif" font-size="9" letter-spacing="1" font-weight="600">TOTAL AUTHORITY ▶</text>
+
+      <line x1="120" y1="415" x2="120" y2="453" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+      <text x="120" y="471" text-anchor="middle" fill="#c8bfaf" font-family="Cinzel, serif" font-size="8.5">ANARCHY</text>
+      <line x1="230" y1="415" x2="230" y2="453" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+      <text x="230" y="471" text-anchor="middle" fill="#c8bfaf" font-family="Cinzel, serif" font-size="8.5">TRIBALISM</text>
+      <line x1="360" y1="415" x2="360" y2="453" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+      <text x="360" y="471" text-anchor="middle" fill="#c8bfaf" font-family="Cinzel, serif" font-size="8.5">DEMOCRACY</text>
+      <line x1="500" y1="415" x2="500" y2="453" stroke="rgba(201,168,76,0.8)" stroke-width="1.5"/>
+      <text x="500" y="471" text-anchor="middle" fill="#c9a84c" font-family="Cinzel, serif" font-size="8.5">REPUBLIC</text>
+      <line x1="640" y1="415" x2="640" y2="453" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+      <text x="640" y="471" text-anchor="middle" fill="#c8bfaf" font-family="Cinzel, serif" font-size="8.5">OLIGARCHY</text>
+      <line x1="760" y1="415" x2="760" y2="453" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+      <text x="760" y="471" text-anchor="middle" fill="#c8bfaf" font-family="Cinzel, serif" font-size="8.5">MONARCHY</text>
+      <line x1="880" y1="415" x2="880" y2="453" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+      <text x="880" y="471" text-anchor="middle" fill="#c8bfaf" font-family="Cinzel, serif" font-size="8.5">TYRANNY</text>
+
+      <text x="500" y="492" text-anchor="middle" fill="rgba(201,168,76,0.28)" font-family="Cinzel Decorative, serif" font-size="10" letter-spacing="4">THE SPECTRUM OF POWER</text>
+
+      <!-- Connectors power → leadership -->
+      <line x1="120" y1="453" x2="120" y2="510" stroke="rgba(201,168,76,0.1)" stroke-width="1" stroke-dasharray="2,4"/>
+      <line x1="230" y1="453" x2="230" y2="510" stroke="rgba(201,168,76,0.1)" stroke-width="1" stroke-dasharray="2,4"/>
+      <line x1="360" y1="453" x2="360" y2="510" stroke="rgba(201,168,76,0.1)" stroke-width="1" stroke-dasharray="2,4"/>
+      <line x1="500" y1="453" x2="500" y2="510" stroke="rgba(201,168,76,0.1)" stroke-width="1" stroke-dasharray="2,4"/>
+      <line x1="640" y1="453" x2="640" y2="510" stroke="rgba(201,168,76,0.1)" stroke-width="1" stroke-dasharray="2,4"/>
+      <line x1="760" y1="453" x2="760" y2="510" stroke="rgba(201,168,76,0.1)" stroke-width="1" stroke-dasharray="2,4"/>
+      <line x1="880" y1="453" x2="880" y2="510" stroke="rgba(201,168,76,0.1)" stroke-width="1" stroke-dasharray="2,4"/>
+
+
+
+      <!-- ══ LEADERSHIP TYPE BAR ══ -->
+      <rect x="100" y="510" width="800" height="38" rx="3" fill="rgba(10,8,6,0.72)" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+      <rect x="101" y="511" width="74"  height="36" rx="2" fill="rgba(100,20,20,0.55)"/>
+      <rect x="175" y="511" width="120" height="36" fill="rgba(140,80,20,0.5)"/>
+      <rect x="295" y="511" width="135" height="36" fill="rgba(40,90,80,0.5)"/>
+      <rect x="430" y="511" width="140" height="36" fill="rgba(60,100,40,0.5)"/>
+      <rect x="570" y="511" width="125" height="36" fill="rgba(30,55,110,0.5)"/>
+      <rect x="695" y="511" width="130" height="36" fill="rgba(70,30,110,0.5)"/>
+      <rect x="825" y="511" width="74"  height="36" rx="2" fill="rgba(20,5,5,0.75)"/>
+      <line x1="175" y1="510" x2="175" y2="548" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+      <line x1="295" y1="510" x2="295" y2="548" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+      <line x1="430" y1="510" x2="430" y2="548" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+      <line x1="570" y1="510" x2="570" y2="548" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+      <line x1="695" y1="510" x2="695" y2="548" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+      <line x1="825" y1="510" x2="825" y2="548" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+
+      <text x="138" y="526" text-anchor="middle" fill="#e8c9a0" font-family="Cinzel, serif" font-size="7" font-weight="600">THE</text>
+      <text x="138" y="539" text-anchor="middle" fill="#e8c9a0" font-family="Cinzel, serif" font-size="8" font-weight="600">AGITATOR</text>
+      <text x="235" y="526" text-anchor="middle" fill="#e8c9a0" font-family="Cinzel, serif" font-size="7" font-weight="600">THE</text>
+      <text x="235" y="539" text-anchor="middle" fill="#e8c9a0" font-family="Cinzel, serif" font-size="8" font-weight="600">CHIEFTAIN</text>
+      <text x="362" y="526" text-anchor="middle" fill="#e8c9a0" font-family="Cinzel, serif" font-size="7" font-weight="600">THE</text>
+      <text x="362" y="539" text-anchor="middle" fill="#e8c9a0" font-family="Cinzel, serif" font-size="8" font-weight="600">TRIBUNE</text>
+      <text x="500" y="526" text-anchor="middle" fill="#e8c9a0" font-family="Cinzel, serif" font-size="7" font-weight="600">THE</text>
+      <text x="500" y="539" text-anchor="middle" fill="#e8c9a0" font-family="Cinzel, serif" font-size="8" font-weight="600">STATESMAN</text>
+      <text x="632" y="526" text-anchor="middle" fill="#e8c9a0" font-family="Cinzel, serif" font-size="7" font-weight="600">THE</text>
+      <text x="632" y="539" text-anchor="middle" fill="#e8c9a0" font-family="Cinzel, serif" font-size="8" font-weight="600">PATRON</text>
+      <text x="760" y="526" text-anchor="middle" fill="#e8c9a0" font-family="Cinzel, serif" font-size="7" font-weight="600">THE</text>
+      <text x="760" y="539" text-anchor="middle" fill="#e8c9a0" font-family="Cinzel, serif" font-size="8" font-weight="600">SOVEREIGN</text>
+      <text x="862" y="526" text-anchor="middle" fill="#e8c9a0" font-family="Cinzel, serif" font-size="7" font-weight="600">THE</text>
+      <text x="862" y="539" text-anchor="middle" fill="#e8c9a0" font-family="Cinzel, serif" font-size="8" font-weight="600">DESPOT</text>
+
+      <text x="138" y="563" text-anchor="middle" fill="#6a5828" font-family="EB Garamond, serif" font-size="9.5" font-style="italic">Robespierre, Che</text>
+      <text x="235" y="563" text-anchor="middle" fill="#6a5828" font-family="EB Garamond, serif" font-size="9.5" font-style="italic">Vercingetorix, Sitting Bull</text>
+      <text x="362" y="563" text-anchor="middle" fill="#6a5828" font-family="EB Garamond, serif" font-size="9.5" font-style="italic">Gracchi, Cleon</text>
+      <text x="500" y="563" text-anchor="middle" fill="#6a5828" font-family="EB Garamond, serif" font-size="9.5" font-style="italic">Cicero, Washington</text>
+      <text x="632" y="563" text-anchor="middle" fill="#6a5828" font-family="EB Garamond, serif" font-size="9.5" font-style="italic">Medici, Caesar</text>
+      <text x="760" y="563" text-anchor="middle" fill="#6a5828" font-family="EB Garamond, serif" font-size="9.5" font-style="italic">Charlemagne, Akbar</text>
+      <text x="862" y="563" text-anchor="middle" fill="#6a5828" font-family="EB Garamond, serif" font-size="9.5" font-style="italic">Stalin, Hitler</text>
+
+      <text x="500" y="582" text-anchor="middle" fill="rgba(201,168,76,0.26)" font-family="Cinzel Decorative, serif" font-size="10" letter-spacing="4">THE SPECTRUM OF LEADERSHIP</text>
+
+      <!-- ══ MACHIAVELLIAN INTENSITY CURVE ══ -->
+      <path d="M 100,720 C 155,720 195,688 236,681 C 278,674 325,666 370,662 C 420,658 458,650 500,644 C 542,650 580,658 630,662 C 675,666 722,674 764,681 C 805,688 845,720 900,720 Z"
+            fill="url(#machGrad)" opacity="0.88"/>
+      <path d="M 100,720 C 155,720 195,688 236,681 C 278,674 325,666 370,662 C 420,658 458,650 500,644 C 542,650 580,658 630,662 C 675,666 722,674 764,681 C 805,688 845,720 900,720"
+            fill="none" stroke="rgba(201,168,76,0.52)" stroke-width="1.5" filter="url(#glow)"/>
+
+      <!-- Machiavellian bar -->
+      <rect x="100" y="720" width="800" height="32" rx="3" fill="url(#machBarGrad)" stroke="rgba(201,168,76,0.4)" stroke-width="1"/>
+      <ellipse cx="500" cy="720" rx="140" ry="7" fill="rgba(201,168,76,0.09)" filter="url(#glow)"/>
+      <text x="500" y="741" text-anchor="middle" fill="rgba(240,210,120,0.88)" font-family="Cinzel, serif" font-size="8.5" letter-spacing="3" font-weight="600">THE MACHIAVELLIAN — PRESENT ACROSS ALL ARCHETYPES</text>
+      <text x="130" y="734" text-anchor="middle" fill="rgba(201,168,76,0.38)" font-family="EB Garamond, serif" font-size="8" font-style="italic">survives</text>
+      <text x="500" y="640" text-anchor="middle" fill="rgba(240,210,100,0.72)" font-family="EB Garamond, serif" font-size="8.5" font-style="italic">thrives</text>
+      <text x="870" y="734" text-anchor="middle" fill="rgba(201,168,76,0.38)" font-family="EB Garamond, serif" font-size="8" font-style="italic">survives</text>
+
+      <!-- ══ INVERTED TRIANGLE — mirror of Eye of Providence ══ -->
+      <polygon points="500,848 554,762 446,762" fill="rgba(10,8,4,0.88)" stroke="#c9a84c" stroke-width="1.5" filter="url(#eyeglow)"/>
+      <polygon points="500,848 554,762 446,762" fill="none" stroke="rgba(255,240,160,0.18)" stroke-width="3.5"/>
+      <g stroke="rgba(201,168,76,0.22)" stroke-width="0.8">
+        <line x1="500" y1="848" x2="500" y2="858"/>
+        <line x1="554" y1="762" x2="566" y2="750"/>
+        <line x1="446" y1="762" x2="434" y2="750"/>
+        <line x1="472" y1="834" x2="460" y2="846"/>
+        <line x1="528" y1="834" x2="540" y2="846"/>
+        <line x1="544" y1="798" x2="558" y2="802"/>
+        <line x1="456" y1="798" x2="442" y2="802"/>
+        <line x1="518" y1="770" x2="524" y2="756"/>
+        <line x1="482" y1="770" x2="476" y2="756"/>
+        <line x1="500" y1="762" x2="500" y2="748"/>
+      </g>
+      <ellipse cx="500" cy="800" rx="27" ry="17" fill="rgba(10,5,2,0.7)" stroke="rgba(201,168,76,0.7)" stroke-width="1"/>
+      <circle cx="500" cy="800" r="11" fill="rgba(80,20,10,0.7)" stroke="rgba(201,168,76,0.85)" stroke-width="1"/>
+      <circle cx="500" cy="800" r="5.5" fill="rgba(180,30,10,0.88)" filter="url(#glow)"/>
+      <circle cx="503" cy="797" r="2" fill="rgba(255,100,60,0.7)"/>
+      <ellipse cx="500" cy="800" rx="1.5" ry="5" fill="rgba(10,2,2,0.95)"/>
+      <path d="M 473,800 Q 500,782 527,800" fill="none" stroke="rgba(201,168,76,0.55)" stroke-width="1"/>
+      <path d="M 473,800 Q 500,816 527,800" fill="none" stroke="rgba(201,168,76,0.55)" stroke-width="1"/>
+      <text x="500" y="756" text-anchor="middle" fill="rgba(201,168,76,0.45)" font-family="Cinzel, serif" font-size="9" letter-spacing="2">ORDO AB CHAO</text>
+
+
+      <!-- Great Axis bracket -->
+      <line x1="962" y1="10" x2="962" y2="755" stroke="rgba(201,168,76,0.14)" stroke-width="1"/>
+      <line x1="957" y1="10"  x2="967" y2="10"  stroke="rgba(201,168,76,0.14)" stroke-width="1"/>
+      <line x1="957" y1="755" x2="967" y2="755" stroke="rgba(201,168,76,0.14)" stroke-width="1"/>
+      <text transform="rotate(90,978,382)" x="978" y="-604" text-anchor="middle" fill="rgba(201,168,76,0.18)" font-family="Cinzel, serif" font-size="6.5" letter-spacing="2">THE GREAT AXIS — GOD TO PRINCE</text>
+    </svg>
+  </div>
+
+  <!-- Written Theory Breakdown -->
+  <div class="divider"><span>✦</span></div>
+
+  <p class="section-title">The Theory Explained</p>
+
+  <div class="breakdown-section">
+    <h3>The Fulcrum — Spirit of Man & Current Events</h3>
+    <p>The fulcrum is the hinge point of all political motion. It represents the collective psychological and material conditions of a civilization at any given moment — war, plague, prosperity, moral collapse, technological disruption. The fulcrum does not move, but it determines how far and fast the pendulum can swing. A stable, confident society holds the fulcrum steady. A society in crisis places the fulcrum at the edge, allowing extreme swings.</p>
+
+    <h3>The String — Institutions of Society</h3>
+    <p>The string (or rod) connecting fulcrum to weight represents the institutions mankind builds to manage power: laws, courts, religions, armies, markets, customs, constitutions. A strong, long string allows wide, slow swings across the spectrum. A frayed or shortened string produces rapid, violent oscillations. Institutions are the mediating force between the spirit of an age and the kind of leader it produces. When they hold, transitions are gradual. When they snap, a civilization leaps from one archetype to a distant extreme.</p>
+
+    <h3>The Pendulum Bob — The People & Their Consent</h3>
+    <p>The weight itself represents the mass of the people — their collective will, fear, hope, and exhaustion. It is heavy, carries momentum, and does not stop on a dime. Even after the force that set it in motion has passed, it continues swinging. This explains why revolutionary periods often overshoot their intended destination, and why authoritarian regimes persist long after their founding crisis has faded.</p>
+
+    <h3>The Swing — Motion Through the Archetypes</h3>
+    <p>The pendulum does not jump between archetypes — it passes through them in sequence. A civilization rarely leaps from Republic directly to Tyranny without first passing through Oligarchy and Monarchy. The speed of the swing determines whether archetypes are lived as stable eras or merely as brief, turbulent transitions. History's most violent revolutions are the pendulum swinging so fast that each archetype lasts only years, not generations.</p>
+  </div>
+  <div class="divider"><span>◎</span></div>
+
+  <p class="section-title">The Nested Pendulums</p>
+
+  <div class="breakdown-section">
+    <p>The Pendulum of Authority does not operate only at the civilizational scale. It operates simultaneously at every level of human organization — from the arc of world history down to the mood of a single household. Each scale has its own period: the World pendulum swings across centuries, barely perceptible in a single lifetime. The Individual pendulum swings across days and weeks, too fast and too small to move anything above it alone. But these scales are not independent. Each level is nested inside the one above it, constrained by its range of motion — and each level feeds back upward, exerting pressure on the macro through the aggregate weight of millions of micro-swings.</p>
+    <p>This is why revolutions are always surprising and always, in retrospect, inevitable. The lower pendulums were already swinging hard long before the upper ones registered the change. Watch the families. They move first.</p>
+  </div>
+
+  <div style="display:flex; justify-content:center; margin: 2rem 0;">
+    <svg viewBox="0 0 800 380" style="width:100%; max-width:800px; min-height:300px;" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="800" height="380" rx="4"
+            fill="rgba(8,6,4,0.88)" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+      <text x="400" y="28" text-anchor="middle" fill="rgba(201,168,76,0.7)"
+            font-family="Cinzel, serif" font-size="13" letter-spacing="3">NESTED PENDULUMS</text>
+      <line x1="20" y1="36" x2="780" y2="36" stroke="rgba(201,168,76,0.2)" stroke-width="0.5"/>
+
+      <!-- WORLD -->
+      <rect x="82" y="44" width="36" height="10" rx="1" fill="rgba(201,168,76,0.55)"/>
+      <circle cx="100" cy="49" r="5" fill="#c9a84c"/>
+      <line x1="100" y1="49" x2="100" y2="78" stroke="#c9a84c" stroke-width="2.5"/>
+      <circle cx="100" cy="91" r="14" fill="rgba(201,168,76,0.18)" stroke="#c9a84c" stroke-width="1.8"/>
+      <text x="100" y="96" text-anchor="middle" fill="rgba(201,168,76,0.95)"
+            font-family="Cinzel, serif" font-size="10" font-weight="600">W</text>
+      <text x="124" y="88" fill="rgba(201,168,76,0.75)"
+            font-family="Cinzel, serif" font-size="13" letter-spacing="1">WORLD</text>
+      <text x="124" y="103" fill="rgba(201,168,76,0.5)"
+            font-family="EB Garamond, serif" font-size="11" font-style="italic">centuries — the arc of global civilizational order</text>
+
+      <!-- CIVILIZATION -->
+      <line x1="100" y1="91" x2="100" y2="118" stroke="rgba(201,168,76,0.5)" stroke-width="1.8" stroke-dasharray="4,3"/>
+      <circle cx="100" cy="130" r="12" fill="rgba(201,168,76,0.18)" stroke="rgba(201,168,76,0.75)" stroke-width="1.5"/>
+      <text x="100" y="134" text-anchor="middle" fill="rgba(201,168,76,0.95)"
+            font-family="Cinzel, serif" font-size="9" font-weight="600">C</text>
+      <text x="122" y="127" fill="rgba(201,168,76,0.75)"
+            font-family="Cinzel, serif" font-size="13" letter-spacing="1">CIVILIZATION</text>
+      <text x="122" y="142" fill="rgba(201,168,76,0.5)"
+            font-family="EB Garamond, serif" font-size="11" font-style="italic">generations — Rome, Han, Ottoman, West</text>
+
+      <!-- NATION -->
+      <line x1="100" y1="130" x2="100" y2="155" stroke="rgba(201,168,76,0.5)" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <circle cx="100" cy="166" r="10.5" fill="rgba(201,168,76,0.18)" stroke="rgba(201,168,76,0.75)" stroke-width="1.3"/>
+      <text x="100" y="170" text-anchor="middle" fill="rgba(201,168,76,0.95)"
+            font-family="Cinzel, serif" font-size="9" font-weight="600">N</text>
+      <text x="120" y="163" fill="rgba(201,168,76,0.75)"
+            font-family="Cinzel, serif" font-size="13" letter-spacing="1">NATION</text>
+      <text x="120" y="178" fill="rgba(201,168,76,0.5)"
+            font-family="EB Garamond, serif" font-size="11" font-style="italic">decades — the political cycle within a state</text>
+
+      <!-- INSTITUTION -->
+      <line x1="100" y1="166" x2="100" y2="188" stroke="rgba(201,168,76,0.5)" stroke-width="1.2" stroke-dasharray="3,3"/>
+      <circle cx="100" cy="198" r="9" fill="rgba(201,168,76,0.18)" stroke="rgba(201,168,76,0.75)" stroke-width="1.1"/>
+      <text x="100" y="202" text-anchor="middle" fill="rgba(201,168,76,0.95)"
+            font-family="Cinzel, serif" font-size="8" font-weight="600">I</text>
+      <text x="118" y="195" fill="rgba(201,168,76,0.75)"
+            font-family="Cinzel, serif" font-size="12" letter-spacing="1">INSTITUTION</text>
+      <text x="118" y="209" fill="rgba(201,168,76,0.5)"
+            font-family="EB Garamond, serif" font-size="11" font-style="italic">years — church, party, corporation, army</text>
+
+      <!-- COMMUNITY -->
+      <line x1="100" y1="198" x2="100" y2="218" stroke="rgba(201,168,76,0.5)" stroke-width="1" stroke-dasharray="3,3"/>
+      <circle cx="100" cy="227" r="7.5" fill="rgba(201,168,76,0.18)" stroke="rgba(201,168,76,0.75)" stroke-width="1"/>
+      <text x="100" y="231" text-anchor="middle" fill="rgba(201,168,76,0.95)"
+            font-family="Cinzel, serif" font-size="7" font-weight="600">Co</text>
+      <text x="116" y="224" fill="rgba(201,168,76,0.75)"
+            font-family="Cinzel, serif" font-size="12" letter-spacing="0.5">COMMUNITY</text>
+      <text x="116" y="238" fill="rgba(201,168,76,0.5)"
+            font-family="EB Garamond, serif" font-size="11" font-style="italic">months — neighborhood, congregation, guild</text>
+
+      <!-- FAMILY -->
+      <line x1="100" y1="227" x2="100" y2="245" stroke="rgba(201,168,76,0.5)" stroke-width="0.9" stroke-dasharray="2,3"/>
+      <circle cx="100" cy="253" r="6" fill="rgba(201,168,76,0.18)" stroke="rgba(201,168,76,0.75)" stroke-width="0.9"/>
+      <text x="100" y="257" text-anchor="middle" fill="rgba(201,168,76,0.95)"
+            font-family="Cinzel, serif" font-size="6.5" font-weight="600">F</text>
+      <text x="115" y="250" fill="rgba(201,168,76,0.75)"
+            font-family="Cinzel, serif" font-size="12" letter-spacing="0.5">FAMILY</text>
+      <text x="115" y="264" fill="rgba(201,168,76,0.5)"
+            font-family="EB Garamond, serif" font-size="11" font-style="italic">a lifetime — the first pendulum any person inhabits</text>
+
+      <!-- INDIVIDUAL -->
+      <line x1="100" y1="253" x2="100" y2="270" stroke="rgba(201,168,76,0.5)" stroke-width="0.8" stroke-dasharray="2,3"/>
+      <circle cx="100" cy="277" r="4.5" fill="rgba(201,168,76,0.18)" stroke="rgba(201,168,76,0.75)" stroke-width="0.8"/>
+      <text x="100" y="280" text-anchor="middle" fill="rgba(201,168,76,0.95)"
+            font-family="Cinzel, serif" font-size="6" font-weight="600">In</text>
+      <text x="114" y="275" fill="rgba(201,168,76,0.75)"
+            font-family="Cinzel, serif" font-size="11" letter-spacing="0.5">INDIVIDUAL</text>
+      <text x="114" y="289" fill="rgba(201,168,76,0.5)"
+            font-family="EB Garamond, serif" font-size="10" font-style="italic">the micro swing that eventually moves the macro</text>
+
+
+    </svg>
+  </div>
+
+
+
+
+  <div class="divider"><span>⚔</span></div>
+
+  <!-- Archetype Cards -->
+  <p class="section-title">The Seven Archetypes of Authority</p>
+
+  <div class="breakdown-section">
+    <p>The spectrum of political authority is not a continuous gradient — it resolves into seven distinct archetypes, each representing a stable configuration of power, legitimacy, and social order. These are not arbitrary categories. They are the recurring forms that human civilization has independently produced across every culture and every era, because they represent the natural equilibrium points of the forces that govern political organization.</p>
+    <p>Each archetype has its own internal logic, its own source of legitimacy, its own characteristic virtues and characteristic failure modes. None is permanently stable. Each contains within it the conditions that will eventually cause it to transform into the next. Understanding the seven is understanding the grammar of political history.</p>
+  </div>
+
+  <div class="archetypes-grid">
+
+    <div class="archetype-card" style="border-top-color: #7a1414;">
+      <div class="card-position" style="color:#b02020;">Far Left — Minimum Authority</div>
+      <div class="card-name">Anarchy</div>
+      <div class="card-era">The Leaderless Age</div>
+      <div class="card-body">No central authority exists. Power is diffuse, local, and personal. Law is custom and force of will. Anarchy is not chaos in the pure sense — it is the raw, ungoverned state of mankind before or after the collapse of formal structures. It is the vacuum into which all other archetypes eventually rush.</div>
+      <div class="card-examples">Historical echoes: Post-Bronze Age Collapse, Early Dark Ages, failed states</div>
+      <div class="card-trigger">Spawned when: Institutions collapse entirely, or a civilization has not yet built them.</div>
+    </div>
+
+    <div class="archetype-card" style="border-top-color: #8c4a10;">
+      <div class="card-position" style="color:#c06a20;">Left — Diffuse Authority</div>
+      <div class="card-name">Tribalism</div>
+      <div class="card-era">The Chieftain Age</div>
+      <div class="card-body">Authority begins to crystallize around strength, lineage, and loyalty. The tribe is the unit of civilization. Leaders emerge by charisma, violence, or inherited status — but their power is personal, not institutional. Law is oral tradition. There is order, but only within the tribe; outside it, anarchy still reigns.</div>
+      <div class="card-examples">Historical echoes: Germanic tribes, pre-Dynastic Egypt, Highland clans, early Mongol confederacies</div>
+      <div class="card-trigger">Spawned when: Survival demands coordination but no formal civic structure yet exists.</div>
+    </div>
+
+    <div class="archetype-card" style="border-top-color: #1e5a4a;">
+      <div class="card-position" style="color:#309070;">Center-Left — Popular Authority</div>
+      <div class="card-name">Democracy</div>
+      <div class="card-era">The Age of the Popular Will</div>
+      <div class="card-body">Authority derives from the active, direct expression of popular will. Unlike the Republic — which governs through institutions and representation — Democracy governs through participation and majority. It is energetic, responsive, and volatile. Democracy is the most emotionally honest form of government: it reflects the actual mood of the populace in real time, which is its great strength and its fatal vulnerability. The mob can be summoned. The demagogue finds his richest soil here.</div>
+      <div class="card-examples">Historical echoes: Athenian Assembly, French Revolutionary Committees, modern populist movements, direct democracy experiments</div>
+      <div class="card-trigger">Spawned when: A citizenry distrusts its representative institutions and demands direct control — usually after perceived elite betrayal.</div>
+    </div>
+
+    <div class="archetype-card" style="border-top-color: #3a6820;">
+      <div class="card-position" style="color:#5a9a38;">Center — Distributed Authority</div>
+      <div class="card-name">Republic</div>
+      <div class="card-era">The Age of Civic Man</div>
+      <div class="card-body">Authority is distributed across institutions, laws, and representative bodies. No single man holds absolute power — power is checked, balanced, and contested. The Republic is the archetype of mature, confident civilization. It requires a populace that trusts its institutions and accepts the rule of law over the rule of men.</div>
+      <div class="card-examples">Historical echoes: Roman Republic, Athenian Democracy, United States, French Third Republic</div>
+      <div class="card-trigger">Spawned when: A civilization achieves enough stability, literacy, and shared identity to govern itself collectively.</div>
+    </div>
+
+    <div class="archetype-card" style="border-top-color: #1e3a78;">
+      <div class="card-position" style="color:#3a60b8;">Center-Right — Concentrated Authority</div>
+      <div class="card-name">Oligarchy</div>
+      <div class="card-era">The Age of Factions</div>
+      <div class="card-body">Power consolidates from the many to the few. A class of wealthy, connected, or militarily dominant elites captures the institutions of the Republic without formally abolishing them. The machinery of governance remains but serves a narrow interest. Oligarchy is often the Republic's shadow — it wears its face while hollowing out its substance.</div>
+      <div class="card-examples">Historical echoes: Late Roman Senate, Gilded Age America, modern plutocracies, Renaissance Italian city-states</div>
+      <div class="card-trigger">Spawned when: Wealth or military power accumulates faster than civic accountability can contain it.</div>
+    </div>
+
+    <div class="archetype-card" style="border-top-color: #481878;">
+      <div class="card-position" style="color:#7a40b8;">Right — Singular Authority</div>
+      <div class="card-name">Monarchy</div>
+      <div class="card-era">The Age of the Crown</div>
+      <div class="card-body">A single ruler holds sovereign authority, typically by divine right or hereditary succession. Power is personal but bounded by tradition, nobility, and the Church. The Monarch is not above all law — he is the embodiment of a cosmic order. Good kings are paternal protectors; bad kings are the precondition for the next swing of the pendulum.</div>
+      <div class="card-examples">Historical echoes: Medieval European kingdoms, Tang Dynasty, Mughal Empire, Ottoman Sultanate</div>
+      <div class="card-trigger">Spawned when: The people crave order and are willing to surrender liberty for security and coherent identity.</div>
+    </div>
+
+    <div class="archetype-card" style="border-top-color: #2a0606;">
+      <div class="card-position" style="color:#8a1818;">Far Right — Maximum Authority</div>
+      <div class="card-name">Tyranny</div>
+      <div class="card-era">The Age of the Iron Fist</div>
+      <div class="card-body">All authority is seized by one will. There is no law above the tyrant, no institution that checks him, no tradition he is bound by. Tyranny is the terminal state of the rightward swing — it consumes its own institutions, its rivals, and eventually its people. Yet it contains the seed of its own destruction: it is the most unstable archetype, and its collapse is always the beginning of the pendulum's return.</div>
+      <div class="card-examples">Historical echoes: Stalin's USSR, Hitler's Germany, Caligula's Rome, North Korea, Pol Pot's Cambodia</div>
+      <div class="card-trigger">Spawned when: Fear, war, or national humiliation drives a people to surrender all freedom for promised salvation.</div>
+    </div>
+
+  </div>
+
+  <div class="divider"><span>✦</span></div>
+
+  <!-- Closing thoughts -->
+  <div class="breakdown-section">
+    <h3>The Nature of the Swing</h3>
+    <p>The pendulum never rests. Every archetype contains within it the conditions that will eventually cause it to fail. Anarchy breeds the demand for order. Tyranny breeds the demand for freedom. The Republic decays into Oligarchy when its citizens grow complacent. The Monarch becomes the Tyrant when he mistakes his throne for his soul. The Theocrat becomes the Tyrant when he mistakes his god for himself.</p>
+
+    <h3>What This Theory Predicts</h3>
+    <p>This framework suggests that no political form is permanent — each is a phase of a civilization's oscillation between the terror of chaos and the terror of control. The great question of political wisdom is not which archetype is best, but how to slow the swing: to build institutions thick enough, and a spirit of man confident enough, that the pendulum barely moves — and when it does, moves slowly, giving each generation time to adapt rather than be consumed.</p>
+  </div>
+
+  <div class="divider"><span>👑</span></div>
+
+  <p class="section-title">The Seven Archetypes of Leadership</p>
+
+  <div class="breakdown-section">
+    <p>Every position on the power spectrum summons a corresponding type of leader. This is not coincidence — it is structural. The conditions of each era create specific demands, and those demands select for specific human qualities. The Agitator cannot thrive in a stable monarchy; the Statesman cannot survive in pure anarchy. Each archetype is called forth by the moment, and the moment is shaped by where the pendulum currently rests.</p>
+    <p>What follows is not a gallery of great men. It is a field guide to the seven recurring patterns of leadership that history produces — each one the natural expression of its place on the spectrum, each one carrying within it the seeds of its own displacement.</p>
+  </div>
+
+  <div class="archetypes-grid">
+
+    <div class="archetype-card" style="border-top-color: #7a1414;">
+      <div class="card-position" style="color:#b02020;">Anarchy — The Leaderless Age</div>
+      <div class="card-name">The Agitator</div>
+      <div class="card-era">Revolutionary / Warlord</div>
+      <div class="card-body">When no authority holds, the man who rises is not a builder but a destroyer — or at best, a mobilizer of grievance. His power comes from energy, rhetoric, and the ability to channel collective rage. He does not administrate; he ignites. History shows this type emerging at the collapse of old orders: the revolutionary firebrand, the warlord who fills the vacuum, the guerrilla commander who leads through personal magnetism rather than institutional mandate.</div>
+      <div class="card-examples">Historical exemplars: Robespierre, Che Guevara, Thomas Münzer, early Mao Zedong</div>
+      <div class="card-trigger">Defining trait: Rules by passion and fear. Has followers, not citizens. His authority expires when the chaos that birthed him ends.</div>
+    </div>
+
+    <div class="archetype-card" style="border-top-color: #8c4a10;">
+      <div class="card-position" style="color:#c06a20;">Tribalism — The Chieftain Age</div>
+      <div class="card-name">The Chieftain</div>
+      <div class="card-era">Champion / Warrior-King</div>
+      <div class="card-body">The first true leader in human history. The Chieftain leads by demonstrated superiority — in war, in the hunt, in judgment. His authority is personal and earned, not inherited or bureaucratic. He is father, judge, and warlord simultaneously. Loyalty is to the man, not the office. The Chieftain is distinguished by his direct, unmediated relationship with his people — they follow him because they have seen him act, not because law demands it.</div>
+      <div class="card-examples">Historical exemplars: Vercingetorix, Sitting Bull, early Genghis Khan, Germanic tribal kings</div>
+      <div class="card-trigger">Defining trait: Personal heroism is his currency. The moment he is seen as weak, his authority dissolves. No institutions protect him.</div>
+    </div>
+
+    <div class="archetype-card" style="border-top-color: #3a6820;">
+      <div class="card-position" style="color:#5a9a38;">Republic — The Civic Age</div>
+      <div class="card-name">The Statesman</div>
+      <div class="card-era">Senator / Representative / Consul</div>
+      <div class="card-body">The highest leadership archetype in terms of civic sophistication. The Statesman does not rule — he serves. His authority comes from the mandate of a constituency, exercised through institutions and checked by law. He is a persuader, a coalition-builder, a negotiator. History's great statesmen are defined by the quality of the peace and order they maintain, and by their willingness to subordinate personal power to the health of the body politic.</div>
+      <div class="card-examples">Historical exemplars: Cicero, Washington, Pericles, Solon, Lincoln, Mandela</div>
+      <div class="card-trigger">Defining trait: His power is borrowed from the people and subject to return. Greatness is measured by what he builds, not what he conquers.</div>
+    </div>
+
+    <div class="archetype-card" style="border-top-color: #1e5a4a;">
+      <div class="card-position" style="color:#309070;">Democracy — The Age of Popular Will</div>
+      <div class="card-name">The Tribune</div>
+      <div class="card-era">Populist / Demagogue / Voice of the People</div>
+      <div class="card-body">The Tribune emerges when the people distrust their institutions and demand a direct voice. He is the champion of the crowd — fluent in grievance, masterful at mobilizing emotion, and dangerous in proportion to his talent. At his best, the Tribune forces accountability and voices genuine injustice. At his worst, he is the demagogue: using popular energy to dismantle the very institutions that protect the people from the next man who comes along. He is the Republic's most seductive internal threat.</div>
+      <div class="card-examples">Historical exemplars: Gracchi brothers, Cleon of Athens, Andrew Jackson, Huey Long, early Chavez</div>
+      <div class="card-trigger">Defining trait: His power is the crowd. When the crowd disperses, so does he. The danger is that he may burn down the house to keep them warm.</div>
+    </div>
+
+    <div class="archetype-card" style="border-top-color: #1e3a78;">
+      <div class="card-position" style="color:#3a60b8;">Oligarchy — The Age of Factions</div>
+      <div class="card-name">The Patron</div>
+      <div class="card-era">Broker / Strongman / Oligarch</div>
+      <div class="card-body">As power concentrates from the many to the few, the dominant leader type becomes the Patron — the man who controls access to resources, favors, and protection. He operates within the formal structures of the Republic but bends them to private ends. He cultivates networks of dependency. He is not a tyrant because he still needs allies; he is not a statesman because he does not serve the public good. He is the pivot point between civic and autocratic rule.</div>
+      <div class="card-examples">Historical exemplars: Lorenzo de' Medici, Julius Caesar (pre-emperor), Marcus Crassus, modern oligarchs</div>
+      <div class="card-trigger">Defining trait: Power through patronage and leverage. He does not command armies — he commands obligations.</div>
+    </div>
+
+    <div class="archetype-card" style="border-top-color: #481878;">
+      <div class="card-position" style="color:#7a40b8;">Monarchy — The Age of the Crown</div>
+      <div class="card-name">The Sovereign</div>
+      <div class="card-era">King / Emperor / Patriarch</div>
+      <div class="card-body">The Sovereign rules by divine right, hereditary succession, or conquest — but governs through a stable administrative apparatus. He is not a Patron playing within a Republic's rules; he IS the law. Yet he is bounded by tradition, the nobility, and the Church. The great Sovereigns of history are paternalistic builders — men who understood that their dynasty's survival depended on their subjects' wellbeing. Power is absolute in theory, constrained in practice.</div>
+      <div class="card-examples">Historical exemplars: Charlemagne, Akbar the Great, Elizabeth I, Frederick the Great, Suleiman the Magnificent</div>
+      <div class="card-trigger">Defining trait: Rules by right, not by force alone. His authority is cosmic and traditional. The good Sovereign is a father; the bad one is the seed of revolution.</div>
+    </div>
+
+
+
+    <div class="archetype-card" style="border-top-color: #2a0606;">
+      <div class="card-position" style="color:#8a1818;">Tyranny — The Age of Total Control</div>
+      <div class="card-name">The Despot</div>
+      <div class="card-era">Autocrat / Totalitarian / Conqueror</div>
+      <div class="card-body">The Despot acknowledges no authority above himself — not tradition, not God, not law. He rules through terror, propaganda, and the systematic destruction of every institution that might check him. History's great despots are defined by their absolute intolerance of rival power centers: they purge generals, subordinate priests, rewrite laws, and remake culture in their image. The Despot is the terminal state of the rightward swing — and always, eventually, the cause of its reversal.</div>
+      <div class="card-examples">Historical exemplars: Stalin, Hitler, Caligula, Pol Pot, Saddam Hussein, Kim Jong-il</div>
+      <div class="card-trigger">Defining trait: Rules through fear. Has no allies — only instruments. His paranoia is structurally rational: in a system without law, only power limits power, so every powerful man is a potential usurper.</div>
+    </div>
+
+  </div>
+
+  <div class="breakdown-section">
+    <h3>The Nature of the Swing</h3>
+    <p>Leadership types do not change gradually — they are replaced. When the pendulum crosses a threshold, the archetype that served the previous moment becomes a liability. The Agitator who won the revolution becomes the obstacle to building the republic. The Statesman who maintained civic order becomes ineffectual in the face of a collapsing institution. History does not retire its leaders gracefully. It discards them.</p>
+
+    <h3>What This Theory Predicts</h3>
+    <p>Identify where the pendulum currently sits in any civilization, and you can predict which leadership type is ascending and which is being discarded. More usefully: you can identify which archetype is being <em>demanded</em> by the population — not necessarily the one they say they want, but the one that the prevailing conditions are about to produce. A population exhausted by chaos does not simply elect a statesman. It summons a sovereign, or worse, a despot — and then tells itself the story of why it had no choice.</p>
+  </div>
+
+  <div class="divider"><span>✦</span></div>
+
+  <div class="divider"><span>♟</span></div>
+
+  <p class="section-title">The Machiavellian Variants — The Prince in Every Age</p>
+
+  <div class="breakdown-section">
+    <h3>A Method, Not an Archetype</h3>
+    <p>The Machiavellian is not a position on the spectrum — he is a mode of operating within any position. Where other leaders are shaped by their era, the Machiavellian shapes himself to his era. He reads the political environment, identifies what performance is demanded, and constructs himself accordingly. He is always the actor who knows he is acting. What follows is what he looks like at each point on the spectrum — and history has provided a face for each.</p>
+  </div>
+
+  <div class="archetypes-grid">
+
+    <div class="archetype-card" style="border-top-color: #7a1414; border: 1px solid rgba(201,168,76,0.15); background: rgba(201,168,76,0.02);">
+      <div class="card-position" style="color:#b02020;">♟ Machiavellian Variant — Anarchy</div>
+      <div class="card-name">The Calculated Agitator</div>
+      <div class="card-era">The Revolutionary Who Does Not Believe His Own Gospel</div>
+      <div class="card-body">Where the sincere Agitator is consumed by the revolution, the Machiavellian Agitator uses it. He studies which grievances have the most fuel, lights the match, then positions himself at the head of the movement before the smoke clears. He speaks the language of liberation while calculating his own ascent. The chaos of anarchy is not his enemy — it is his medium. He is most dangerous in the transitional moment when the old order has fallen and no new one has solidified.</div>
+      <div class="card-examples">Historical exemplars: Napoleon Bonaparte (early career), Lenin, Fidel Castro</div>
+      <div class="card-trigger">His tell: He is the only revolutionary who survives the revolution and ends up in power.</div>
+    </div>
+
+    <div class="archetype-card" style="border-top-color: #8c4a10; border: 1px solid rgba(201,168,76,0.15); background: rgba(201,168,76,0.02);">
+      <div class="card-position" style="color:#c06a20;">♟ Machiavellian Variant — Tribalism</div>
+      <div class="card-name">The Myth-Maker</div>
+      <div class="card-era">The Chieftain Who Engineers His Own Legend</div>
+      <div class="card-body">In a tribal world, authority flows from demonstrated prowess. The Machiavellian Chieftain understands this and manufactures the right demonstrations. He picks enemies he can defeat, engineers moments of public courage, and ensures the storytellers around the fire tell his version of events. He is not the bravest man — he is the man who has most skillfully convinced the tribe he is. His genius is understanding that in a world ruled by reputation, reputation itself can be built.</div>
+      <div class="card-examples">Historical exemplars: Genghis Khan (master of psychological warfare and cultivated terror), Octavian's early career</div>
+      <div class="card-trigger">His tell: His victories are always legendary. His failures are never discussed.</div>
+    </div>
+
+    <div class="archetype-card" style="border-top-color: #1e5a4a; border: 1px solid rgba(201,168,76,0.15); background: rgba(201,168,76,0.02);">
+      <div class="card-position" style="color:#309070;">♟ Machiavellian Variant — Democracy</div>
+      <div class="card-name">The Demagogue</div>
+      <div class="card-era">The Tribune Who Does Not Believe in the People</div>
+      <div class="card-body">The Machiavellian Tribune has discovered the most powerful force in democratic politics: the crowd does not want to be informed, it wants to be felt. He studies not policy but grievance — mapping the precise emotional terrain of a disaffected population with the clinical detachment of a general surveying a battlefield. He speaks their language, mirrors their rage, and positions himself as the only man who truly understands their suffering. He does not believe a word of it. The crowd is his instrument, not his constituency. Democracy is uniquely vulnerable to this variant because it hands him the mechanism of his own ascent — the vote — and asks only that he perform sincerity convincingly enough to receive it.</div>
+      <div class="card-examples">Historical exemplars: Alcibiades of Athens, Huey Long, early Mussolini, certain readings of Caesar's populist phase</div>
+      <div class="card-trigger">His tell: His outrage is always calibrated to the room. In private, he is serene. His enemies are whoever the crowd currently hates most.</div>
+    </div>
+
+    <div class="archetype-card" style="border-top-color: #3a6820; border: 1px solid rgba(201,168,76,0.15); background: rgba(201,168,76,0.02);">
+      <div class="card-position" style="color:#5a9a38;">♟ Machiavellian Variant — Republic</div>
+      <div class="card-name">The Virtuous Schemer</div>
+      <div class="card-era">The Senator Who Wears the Public Good Like a Costume</div>
+      <div class="card-body">This is the most insidious variant because he is the hardest to distinguish from the genuine Statesman. He speaks eloquently of civic duty, the common man, the rule of law. He builds coalitions not from shared conviction but from calculated mutual benefit. Every vote is weighed, every speech tested, every friendship cultivated for its future value. The Republic rewards him because it was built to reward exactly his performance. He is, in a sense, the Republic's shadow — the proof that its institutions can be gamed by a sufficiently patient and talented man.</div>
+      <div class="card-examples">Historical exemplars: Julius Caesar (in the Senate), Talleyrand, Lyndon B. Johnson</div>
+      <div class="card-trigger">His tell: His principles always happen to align with his interests. His enemies always happen to be obstacles to the public good.</div>
+    </div>
+
+    <div class="archetype-card" style="border-top-color: #1e3a78; border: 1px solid rgba(201,168,76,0.15); background: rgba(201,168,76,0.02);">
+      <div class="card-position" style="color:#3a60b8;">♟ Machiavellian Variant — Oligarchy</div>
+      <div class="card-name">The Grandmaster Patron</div>
+      <div class="card-era">The Prince in His Natural Habitat</div>
+      <div class="card-body">Oligarchy is where the Machiavellian is most fully himself. The environment is structured around exactly what he excels at: leverage, patronage, the management of dependency, the cultivation of useful men. He does not need to perform virtue for a voting public or justify himself to God. He needs only to hold more cards than any rival. The Grandmaster Patron maps every power relationship in his world, identifies who owes whom, and inserts himself as the indispensable node through which all favors must flow. Machiavelli essentially wrote the manual for this man.</div>
+      <div class="card-examples">Historical exemplars: Lorenzo de' Medici, Cardinal Richelieu, Marcus Crassus, Henry Kissinger</div>
+      <div class="card-trigger">His tell: Nobody can quite say how he got so powerful. He holds no grand title. He simply cannot be removed.</div>
+    </div>
+
+    <div class="archetype-card" style="border-top-color: #481878; border: 1px solid rgba(201,168,76,0.15); background: rgba(201,168,76,0.02);">
+      <div class="card-position" style="color:#7a40b8;">♟ Machiavellian Variant — Monarchy</div>
+      <div class="card-name">The Lion and the Fox</div>
+      <div class="card-era">The King Who Rules by Calculation, Not Right</div>
+      <div class="card-body">Machiavelli said the Prince must be both lion and fox — force and cunning combined. The Machiavellian Sovereign embodies this perfectly. He maintains the pageantry of divine right and dynastic tradition while operating with pure strategic rationality beneath it. He plays nobles against clergy, foreign powers against domestic rivals, and adjusts his theology, his alliances, and even his marriages to serve political ends. He is the most stable of all Machiavellian variants because the monarchical system gives him a legitimating costume that requires no constant maintenance.</div>
+      <div class="card-examples">Historical exemplars: Henry VIII, Frederick the Great, Catherine the Great, Philip II of Spain</div>
+      <div class="card-trigger">His tell: His piety, his outrage, his loyalty — all appear precisely when politically useful and fade precisely when they are not.</div>
+    </div>
+
+    <div class="archetype-card" style="border-top-color: #2a0606; border: 1px solid rgba(201,168,76,0.15); background: rgba(201,168,76,0.02);">
+      <div class="card-position" style="color:#8a1818;">♟ Machiavellian Variant — Tyranny</div>
+      <div class="card-name">The Rational Despot</div>
+      <div class="card-era">The Tyrant Who Is Never Surprised</div>
+      <div class="card-body">Most despots are eventually destroyed by their own paranoia — they purge too many, trust too few, and create the very conspiracies they feared. The Machiavellian Despot understands this trap and navigates it. He uses terror surgically, not reflexively. He creates factions among his subordinates so none can unite against him. He alternates brutality with calculated generosity to keep his inner circle off-balance. He is the rarest variant because pure tyranny is structurally hostile to cunning — eventually the system demands total submission from even the tyrant's own mind. But for a season, the Rational Despot is the most formidable political force in human history.</div>
+      <div class="card-examples">Historical exemplars: Stalin (early-mid career), Augustus Caesar, Deng Xiaoping</div>
+      <div class="card-trigger">His tell: His cruelties are never random. Every execution solves a specific problem. Every mercy buys a specific loyalty.</div>
+    </div>
+
+  </div>
+
+  <div class="breakdown-section">
+    <h3>The Nature of the Swing</h3>
+    <p>The Machiavellian does not cause the swing — he surfs it. He is the political animal who, more than any other type, understands that the pendulum is always in motion and that power flows to those who read that motion correctly. His greatest danger to civilization is not that he is evil, but that he is adaptive. He will operate within a republic, a tyranny, a democracy, or an oligarchy with equal facility — which means he never builds anything. He optimizes for his own position within whatever system he finds, and in doing so he subtly erodes the conditions that sustain that system. The Machiavellian is the termite in the structural beam.</p>
+
+    <h3>What This Theory Predicts</h3>
+    <p>The Machiavellian is most dangerous during transitions — the moments when one archetype is collapsing and the next has not yet solidified. In the interregnum, when the rules are unclear and legitimacy is contested, his flexibility becomes an overwhelming advantage over sincere actors who are still playing by the old rules. Every major civilizational transition produces a Machiavellian figure who shapes the outcome not because he has the strongest vision but because he has the most accurate read of the room. Identify the transition, and you will find him nearby — rarely at the center, always in the position of maximum leverage.</p>
+  </div>
+
+  <div class="divider"><span>◎</span></div>
+
+  <p class="section-title">The Memory Field — A Living Timeline</p>
+
+  <div class="breakdown-section">
+    <p>The pendulum does not swing freely. It swings through a field — a magnetic environment generated by civilizational memory. When a society has recently experienced the terror of chaos, that memory charges the field with a repulsive force pushing the bob toward order. When it has recently experienced the terror of control, the opposite charge builds. The pendulum always swings away from what was last felt most viscerally — not toward what is abstractly best.</p>
+    <p>This is why the same sequence repeats across cultures that have never met: trauma → overcorrection → new trauma → overcorrection. The field is not ideological. It does not care about left or right, progress or tradition. It responds only to the intensity and recency of remembered pain. The timeline below models this field across recorded history — showing how the accumulated weight of civilizational memory shapes the position of the bob at any given moment, and what that predicts about the direction of the next swing.</p>
+  </div>
+
+  <!-- ══ THE LIVING TIMELINE — embedded ══ -->
+  <div class="tl-embed" style="margin: 2rem 0 2.5rem;">
+    <style>
+    .tl-embed {
+      font-family: 'EB Garamond', serif;
+      color: #c8bfaf;
+    }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold:      #c9a84c;
+  --gold-dim:  rgba(201,168,76,0.35);
+  --gold-faint:rgba(201,168,76,0.1);
+  --chaos:     #a02020;
+  --chaos-bright: #d44040;
+  --tyranny:   #5a1880;
+  --tyranny-bright: #a060d8;
+  --republic:  #2a6840;
+  --republic-bright: #50b870;
+  --bg:        #080604;
+  --panel:     rgba(10,8,5,0.97);
+  --text:      #c8bfaf;
+  --text-dim:  rgba(200,191,175,0.5);
+}
+
+.tl-embed {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'EB Garamond', serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+}
+
+.tl-embed .tl-page { max-width: 1200px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+/* HEADER */
+.tl-embed .tl-header { text-align: center; margin-bottom: 2.5rem; }
+.tl-embed .header-rule { width: 1px; height: 36px; background: linear-gradient(to bottom, transparent, var(--gold)); margin: 0 auto 1.2rem; }
+.tl-embed .eyebrow { font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.35em; color: var(--gold-dim); text-transform: uppercase; margin-bottom: 0.6rem; }
+.tl-embed .tl-title { font-family: 'Cinzel Decorative', serif; font-size: 1.8rem; color: var(--gold); letter-spacing: 0.06em; text-shadow: 0 0 50px rgba(201,168,76,0.25); margin-bottom: 0.4rem; }
+.tl-embed .tl-subtitle { font-size: 1rem; font-style: italic; color: var(--text-dim); }
+.tl-embed .header-rule-bot { width: 1px; height: 36px; background: linear-gradient(to bottom, var(--gold), transparent); margin: 1.2rem auto 0; }
+
+/* MAIN CANVAS CONTAINER */
+.tl-embed .canvas-wrap {
+  position: relative;
+  background: var(--panel);
+  border: 1px solid rgba(201,168,76,0.18);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+.tl-embed .canvas-wrap::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 30%, rgba(201,168,76,0.03) 0%, transparent 70%);
+  pointer-events: none; z-index: 1;
+}
+.tl-embed canvas { display: block; width: 100%; cursor: pointer; position: relative; z-index: 2; }
+
+/* SCRUBBER */
+.tl-embed .scrubber-wrap {
+  background: var(--panel);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 3px;
+  padding: 1.2rem 1.8rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.tl-embed .scrub-label { font-family: 'Cinzel', serif; font-size: 0.65rem; letter-spacing: 0.2em; color: var(--gold-dim); text-transform: uppercase; white-space: nowrap; }
+.tl-embed .scrub-year { font-family: 'Cinzel', serif; font-size: 1.1rem; color: var(--gold); min-width: 6rem; text-align: right; white-space: nowrap; }
+.tl-embed input[type=range]#scrubber {
+  flex: 1; min-width: 120px;
+  -webkit-appearance: none; appearance: none;
+  height: 3px;
+  background: linear-gradient(to right, rgba(201,168,76,0.6) var(--p,50%), rgba(201,168,76,0.12) var(--p,50%));
+  border-radius: 2px; outline: none; cursor: pointer;
+}
+.tl-embed input[type=range]#scrubber::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 16px; height: 16px;
+  border-radius: 50%; background: var(--gold);
+  box-shadow: 0 0 10px rgba(201,168,76,0.7); cursor: pointer;
+}
+
+/* INFO PANEL */
+.tl-embed .tl-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.tl-embed .tl-info-card {
+  background: var(--panel);
+  border: 1px solid rgba(201,168,76,0.12);
+  border-radius: 3px;
+  padding: 1rem 1.2rem;
+  position: relative;
+  overflow: hidden;
+}
+.tl-embed .tl-info-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+}
+.tl-embed .tl-info-card.chaos-card::before   { background: linear-gradient(to right, var(--chaos-bright), transparent); }
+.tl-embed .tl-info-card.pendulum-card::before{ background: linear-gradient(to right, transparent, var(--gold), transparent); }
+.tl-embed .tl-info-card.tyranny-card::before { background: linear-gradient(to right, transparent, var(--tyranny-bright)); }
+.tl-embed .tl-info-title { font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 0.5rem; }
+.tl-embed .chaos-card .tl-info-title { color: var(--chaos-bright); }
+.tl-embed .pendulum-card .tl-info-title { color: var(--gold); }
+.tl-embed .tyranny-card .tl-info-title { color: var(--tyranny-bright); }
+.tl-embed .tl-info-value { font-size: 1.3rem; font-family: 'Cinzel', serif; margin-bottom: 0.3rem; }
+.tl-embed .chaos-card .tl-info-value { color: var(--chaos-bright); }
+.tl-embed .pendulum-card .tl-info-value { color: var(--gold); }
+.tl-embed .tyranny-card .tl-info-value { color: var(--tyranny-bright); }
+.tl-embed .tl-info-desc { font-size: 0.78rem; font-style: italic; color: var(--text-dim); line-height: 1.5; }
+
+/* NARRATIVE BOX */
+.tl-embed .tl-narrative {
+  background: var(--panel);
+  border: 1px solid rgba(201,168,76,0.12);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 3px 3px 0;
+  padding: 1.1rem 1.5rem;
+  font-size: 0.9rem; font-style: italic; line-height: 1.75;
+  color: var(--text-dim);
+}
+.tl-embed .tl-narrative strong { font-style: normal; color: var(--gold); font-family: 'Cinzel', serif; font-size: 0.68rem; letter-spacing: 0.12em; }
+
+/* RECENT EVENTS PANEL */
+.tl-embed .recent-wrap {
+  background: var(--panel);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 3px;
+  padding: 1.1rem 1.4rem 0.8rem;
+  margin-bottom: 1.5rem;
+}
+.tl-embed .recent-title {
+  font-family: 'Cinzel', serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-bottom: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.tl-embed .recent-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(201,168,76,0.12);
+}
+.tl-embed .recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.tl-embed .recent-event {
+  display: grid;
+  grid-template-columns: 10px 5.5rem 1fr auto;
+  align-items: start;
+  gap: 0.7rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: 2px;
+  background: rgba(201,168,76,0.03);
+  border: 1px solid rgba(201,168,76,0.07);
+  transition: background 0.15s;
+}
+.tl-embed .recent-event:hover { background: rgba(201,168,76,0.07); }
+.tl-embed .recent-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  margin-top: 3px;
+  flex-shrink: 0;
+  box-shadow: 0 0 6px currentColor;
+}
+.tl-embed .recent-year {
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  color: var(--gold);
+  white-space: nowrap;
+}
+.tl-embed .recent-ago {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  font-style: italic;
+  white-space: nowrap;
+  margin-top: 1px;
+}
+.tl-embed .recent-name {
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  color: var(--text);
+  margin-bottom: 0.2rem;
+}
+.tl-embed .recent-note {
+  font-size: 0.78rem;
+  font-style: italic;
+  color: var(--text-dim);
+  line-height: 1.45;
+}
+.tl-embed .recent-charge {
+  font-family: 'Cinzel', serif;
+  font-size: 0.68rem;
+  text-align: right;
+  white-space: nowrap;
+  margin-top: 2px;
+}
+
+/* LEGEND */
+.tl-embed .tl-legend {
+  display: flex; justify-content: center; gap: 2rem;
+  margin-bottom: 1.2rem; flex-wrap: wrap;
+}
+.tl-embed .leg { display: flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; color: var(--text-dim); }
+.tl-embed .leg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+@media(max-width:680px){
+  .tl-embed .tl-info-grid { grid-template-columns: 1fr; }
+  .tl-embed .tl-title { font-size: 1.2rem; }
+}
+
+    </style>
+    
+<div class="tl-page" style="padding:0;"><div class="tl-legend">
+    <div class="leg"><div class="leg-dot" style="background:var(--chaos-bright)"></div> Chaos / Anarchy event</div>
+    <div class="leg"><div class="leg-dot" style="background:var(--tyranny-bright)"></div> Tyranny / Control event</div>
+    <div class="leg"><div class="leg-dot" style="background:var(--republic-bright)"></div> Republic / Stability event</div>
+    <div class="leg"><div class="leg-dot" style="background:var(--gold);opacity:0.7"></div> Pendulum position</div>
+  </div>
+
+  <div class="canvas-wrap">
+    <canvas id="main" height="520"></canvas>
+  </div>
+
+  <div class="scrubber-wrap">
+    <span class="scrub-label">Viewing Year</span>
+    <input type="range" id="scrubber" min="0" max="100" value="100">
+    <span class="scrub-year" id="yearDisplay">2025 CE</span>
+    <input type="number" id="yearInput" min="300" max="2025" value="2025" 
+           placeholder="Year"
+           style="
+             background: rgba(201,168,76,0.08);
+             border: 1px solid rgba(201,168,76,0.3);
+             border-radius: 3px;
+             color: #c9a84c;
+             font-family: Cinzel, serif;
+             font-size: 0.85rem;
+             padding: 0.3rem 0.6rem;
+             width: 90px;
+             outline: none;
+             text-align: center;
+             -moz-appearance: textfield;
+           ">
+    <button id="goBtn" style="
+      background: rgba(201,168,76,0.12);
+      border: 1px solid rgba(201,168,76,0.35);
+      border-radius: 3px;
+      color: #c9a84c;
+      font-family: Cinzel, serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      padding: 0.35rem 0.8rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: background 0.2s;
+    " onmouseover="this.style.background='rgba(201,168,76,0.22)'"
+       onmouseout="this.style.background='rgba(201,168,76,0.12)'">Go</button>
+  </div>
+
+  <div class="tl-info-grid">
+    <div class="tl-info-card chaos-card">
+      <div class="tl-info-title">Chaos Memory Charge</div>
+      <div class="tl-info-value" id="chaosCharge">—</div>
+      <div class="tl-info-desc" id="chaosDesc">—</div>
+    </div>
+    <div class="tl-info-card pendulum-card">
+      <div class="tl-info-title">Pendulum Position</div>
+      <div class="tl-info-value" id="pendulumPos">—</div>
+      <div class="tl-info-desc" id="pendulumDesc">—</div>
+    </div>
+    <div class="tl-info-card tyranny-card">
+      <div class="tl-info-title">Tyranny Memory Charge</div>
+      <div class="tl-info-value" id="tyrannyCharge">—</div>
+      <div class="tl-info-desc" id="tyrannyDesc">—</div>
+    </div>
+  </div>
+
+  <div class="recent-wrap">
+    <div class="recent-title">Recent Events in Memory Field</div>
+    <div class="recent-list" id="recentList">
+      <div style="font-style:italic;font-size:0.82rem;color:var(--text-dim);padding:0.4rem 0.6rem;">
+        Drag the scrubber to populate events.
+      </div>
+    </div>
+  </div>
+
+  <div class="tl-narrative" id="narrative">Drag the scrubber to move through history.</div>
+
+</div>
+
+
+    <script>
+
+// ── HISTORICAL EVENTS ─────────────────────────────────────────────────────
+// type: 'chaos' | 'tyranny' | 'republic'
+// impact: how hard this swings the pendulum (0–100)
+// halfLife: how many years before this memory halves
+const EVENTS = [
+  // CHAOS / ANARCHY EVENTS — push bob toward tyranny (civilization seeks order)
+  { year: 410,  type:'chaos',    name:'Sack of Rome',             impact:90,  halfLife:80,  note:'Visigoths breach the eternal city. The unthinkable becomes real.' },
+  { year: 476,  type:'chaos',    name:'Fall of Western Rome',     impact:100, halfLife:100, note:'Western Empire collapses. Five centuries of order dissolve in a generation.' },
+  { year: 793,  type:'chaos',    name:'Viking Raids Begin',       impact:65,  halfLife:60,  note:'Norse raids shatter coastal security across Europe.' },
+  { year: 1347, type:'chaos',    name:'Black Death',              impact:88,  halfLife:70,  note:'A third of Europe dies. Social order, church authority, and feudal bonds fracture.' },
+  { year: 1381, type:'chaos',    name:'Peasants\' Revolt',        impact:60,  halfLife:50,  note:'England\'s underclass rises. The hierarchy trembles.' },
+  { year: 1618, type:'chaos',    name:'Thirty Years\' War',       impact:82,  halfLife:75,  note:'Religious civil war devastates Central Europe. 8 million dead.' },
+  { year: 1789, type:'chaos',    name:'French Revolution',        impact:92,  halfLife:80,  note:'1789 Revolution; the Terror of 1793-94 follows. ~17,000 executed. Liberty becomes a blade.' },
+  { year: 1871, type:'chaos',    name:'Paris Commune',            impact:62,  halfLife:45,  note:'Radical workers seize Paris. The bourgeoisie\'s nightmare made real.' },
+  { year: 1917, type:'chaos',    name:'Russian Revolution',       impact:88,  halfLife:70,  note:'Bolsheviks dissolve the Tsarist order. Chaos before iron control.' },
+  { year: 1923, type:'chaos',    name:'Weimar Hyperinflation',    impact:85,  halfLife:55,  note:'Wheelbarrows of cash for bread. Economic order collapses.' },
+  { year: 1968, type:'chaos',    name:'Global Upheaval',          impact:58,  halfLife:40,  note:'Student revolts, assassinations, social dissolution across the West.' },
+  { year: 2008, type:'chaos',    name:'Financial Crisis',         impact:52,  halfLife:30,  note:'Global financial order fractures. Institutions discredited.' },
+  { year: 1337, type:'chaos',    name:'Hundred Years\' War',       impact:68,  halfLife:60,  note:'England vs France for a century. Feudal order shattered, nation-states emerge from the wreckage.' },
+  { year: 1517, type:'chaos',    name:'Protestant Reformation',   impact:78,  halfLife:70,  note:'Luther\'s theses fracture Christendom. A century of religious war follows. Unified Western authority never recovers.' },
+  { year: 1642, type:'chaos',    name:'English Civil War',        impact:72,  halfLife:60,  note:'Parliament vs King. Charles I beheaded 1649. The sovereign\'s divine right fatally wounded.' },
+  { year: 1914, type:'chaos',    name:'World War I',              impact:95,  halfLife:75,  note:'17 million dead. Four empires dissolved. The confident 19th-century order annihilated in four years of industrialized slaughter.' },
+  { year: 1941, type:'chaos',    name:'World War II',             impact:98,  halfLife:80,  note:'50 million dead. Holocaust. Total war against civilians. The worst atrocity in recorded Western history.' },
+  { year: 2020, type:'chaos',    name:'COVID Collapse',           impact:55,  halfLife:25,  note:'Pandemic, riots, institutional breakdown. Order suddenly fragile.' },
+
+  // TYRANNY / CONTROL EVENTS — push bob toward chaos (civilization seeks freedom)
+  { year: 284,  type:'tyranny',  name:'Diocletian\'s Dominate',   impact:72,  halfLife:65,  note:'Emperor becomes god-king. Republican façade stripped away.' },
+  { year: 800,  type:'tyranny',  name:'Carolingian Empire',       impact:55,  halfLife:55,  note:'Charlemagne crowned Holy Roman Emperor. Unification by conquest — order and domination fused.' },
+  { year: 1066, type:'tyranny',  name:'Norman Conquest',          impact:70,  halfLife:60,  note:'England subjected to foreign feudal domination overnight.' },
+  { year: 1232, type:'tyranny',  name:'Papal Inquisition',        impact:75,  halfLife:65,  note:'Institutional terror as instrument of doctrinal control.' },
+  { year: 1478, type:'tyranny',  name:'Spanish Inquisition',      impact:78,  halfLife:70,  note:'State and church fuse into an apparatus of surveillance and fear.' },
+  { year: 1685, type:'tyranny',  name:'Louis XIV Absolutism',     impact:70,  halfLife:55,  note:'L\'état c\'est moi. Aristocracy defanged. Power absolute.' },
+  { year: 1799, type:'tyranny',  name:'Napoleon\'s Coup',         impact:82,  halfLife:65,  note:'Republic consumed by empire. Liberty\'s general becomes its master.' },
+  { year: 1933, type:'tyranny',  name:'Nazi Seizure of Power',    impact:100, halfLife:90,  note:'Democracy votes itself out of existence. Six million murdered.' },
+  { year: 1937, type:'tyranny',  name:'Stalinist Terror',         impact:95,  halfLife:85,  note:'Show trials, gulags, manufactured famine. Totalitarianism perfected.' },
+  { year: 1956, type:'tyranny',  name:'Hungarian Uprising Crushed',impact:65, halfLife:50,  note:'Soviet tanks end a people\'s revolt. The iron curtain holds.' },
+  { year: 1941, type:'tyranny',  name:'Holocaust',                impact:100, halfLife:90,  note:'Six million Jews, millions more murdered by industrial state machinery. The ultimate expression of tyranny\'s logic taken to its end.' },
+  { year: 2001, type:'tyranny',  name:'Post-9/11 Surveillance',   impact:58,  halfLife:35,  note:'Security state expands rapidly. Civil liberties contract.' },
+
+  // REPUBLIC / STABILITY — bob finds center (resists both poles)
+  { year: 529,  type:'republic', name:'Justinian\'s Code',        impact:60,  halfLife:70,  note:'Roman law systematized. The rule of law outlives the empire.' },
+  { year: 1215, type:'republic', name:'Magna Carta',              impact:80,  halfLife:200, note:'Lords bind the king to law. The first check on absolute power.' },
+  { year: 1648, type:'republic', name:'Peace of Westphalia',      impact:75,  halfLife:90,  note:'State sovereignty established. The modern order is born.' },
+  { year: 1688, type:'republic', name:'Glorious Revolution',      impact:78,  halfLife:100, note:'Constitutional monarchy. Parliament supreme. Tyranny checked without bloodbath.' },
+  { year: 1776, type:'republic', name:'American Founding',        impact:88,  halfLife:150, note:'Enlightenment principles institutionalized. A republic, if you can keep it.' },
+  { year: 1945, type:'republic', name:'Post-War Liberal Order',   impact:85,  halfLife:80,  note:'NATO, UN, Marshall Plan. Institutions built from the ruins of tyranny.' },
+  { year: 1989, type:'republic', name:'Fall of the Berlin Wall',  impact:80,  halfLife:55,  note:'Soviet empire dissolves. Liberal democracy\'s apparent triumph.' },
+];
+
+const START_YEAR = 300;
+const END_YEAR   = 2025;
+const HALF_LIFE_SCALE = 1.0;
+
+// ── COMPUTE STATE AT A GIVEN YEAR ─────────────────────────────────────────
+function computeStateAt(year) {
+  let chaosCharge   = 0;
+  let tyrannyCharge = 0;
+  let republicCharge = 0;
+
+  EVENTS.forEach(ev => {
+    if (ev.year > year) return;
+    const age = year - ev.year;
+    const hl  = ev.halfLife * HALF_LIFE_SCALE;
+    const decayed = ev.impact * Math.pow(0.5, age / hl);
+    if      (ev.type === 'chaos')   chaosCharge   += decayed;
+    else if (ev.type === 'tyranny') tyrannyCharge += decayed;
+    else if (ev.type === 'republic') republicCharge += decayed;
+  });
+
+  // Normalize charges to 0-100
+  const maxPossible = 300;
+  chaosCharge    = Math.min(100, chaosCharge    / maxPossible * 100);
+  tyrannyCharge  = Math.min(100, tyrannyCharge  / maxPossible * 100);
+  republicCharge = Math.min(100, republicCharge / maxPossible * 100);
+
+  // Pendulum position:
+  // High chaos charge → bob pushed TOWARD tyranny (people seek order)
+  // High tyranny charge → bob pushed TOWARD chaos (people seek freedom)
+  // Republic charge → bob pulled toward center
+  // Result: -100 = full anarchy, 0 = republic, +100 = full tyranny
+  const rawPos = (chaosCharge - tyrannyCharge) * 0.6 - republicCharge * 0.3;
+  const position = Math.max(-100, Math.min(100, rawPos));
+
+  return { chaosCharge, tyrannyCharge, republicCharge, position };
+}
+
+// Precompute full curve
+const CURVE_STEPS = 800;
+function buildCurve() {
+  const pts = [];
+  for (let i = 0; i <= CURVE_STEPS; i++) {
+    const yr = START_YEAR + (i / CURVE_STEPS) * (END_YEAR - START_YEAR);
+    const s  = computeStateAt(yr);
+    pts.push({ year: yr, ...s });
+  }
+  return pts;
+}
+const CURVE = buildCurve();
+
+// ── CANVAS SETUP ──────────────────────────────────────────────────────────
+const canvas = document.getElementById('main');
+const ctx    = canvas.getContext('2d');
+let W, H;
+let currentPct = 1.0; // 0–1
+
+function resize() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  W = canvas.width  = rect.width || 0;
+  H = canvas.height = 520;
+  if (W > 0) draw();
+}
+
+// ── LAYOUT ────────────────────────────────────────────────────────────────
+const PAD = { top: 30, right: 24, bottom: 48, left: 22 };
+// Three bands stacked vertically:
+// TYRANNY ZONE (top):   river top half
+// RIVER (center):       historical timeline
+// CHAOS ZONE (bottom):  river bottom half
+
+function layout() {
+  const cW = W - PAD.left - PAD.right;
+  const cH = H - PAD.top  - PAD.bottom;
+  const riverH = Math.round(cH * 0.18);
+  const riverY = PAD.top + Math.round(cH * 0.5) - riverH / 2;
+  return {
+    cW, cH,
+    riverY, riverH,
+    tyrannyTop: PAD.top,
+    tyrannyBot: riverY,
+    chaosTop:   riverY + riverH,
+    chaosBot:   PAD.top + cH,
+    centerY:    riverY + riverH / 2,
+  };
+}
+
+function xOfYear(yr, cW) {
+  return PAD.left + ((yr - START_YEAR) / (END_YEAR - START_YEAR)) * cW;
+}
+
+// Convert pendulum position (-100=chaos … 0=republic … +100=tyranny) to Y
+function yOfPos(pos, L) {
+  // pos: -100 → chaosBot, 0 → centerY, +100 → tyrannyTop+10
+  if (pos >= 0) {
+    // tyranny side — from centerY up
+    return L.centerY - (pos / 100) * (L.centerY - L.tyrannyTop - 30);
+  } else {
+    // chaos side — from centerY down
+    return L.centerY + (-pos / 100) * (L.chaosBot  - L.centerY - 30);
+  }
+}
+
+// ── DRAW ──────────────────────────────────────────────────────────────────
+function safeLinGrad(x0,y0,x1,y1) {
+  if (!isFinite(x0)||!isFinite(y0)||!isFinite(x1)||!isFinite(y1)) return null;
+  return ctx.createLinearGradient(x0,y0,x1,y1);
+}
+function safeRadGrad(x0,y0,r0,x1,y1,r1) {
+  if (!isFinite(x0)||!isFinite(y0)||!isFinite(r0)||!isFinite(x1)||!isFinite(y1)||!isFinite(r1)||r0<0||r1<0) return null;
+  return ctx.createRadialGradient(x0,y0,r0,x1,y1,r1);
+}
+
+function draw() {
+  if (!W || !H || W <= 0) return;
+  ctx.clearRect(0, 0, W, H);
+  const L = layout();
+  const viewYear = START_YEAR + currentPct * (END_YEAR - START_YEAR);
+
+  // ── Background gradient zones ──
+  // Tyranny zone — dark purple tint
+  const tyGrad = safeLinGrad(0, L.tyrannyTop, 0, L.tyrannyBot); if (!tyGrad) return;
+  tyGrad.addColorStop(0, 'rgba(60,10,90,0.35)');
+  tyGrad.addColorStop(1, 'rgba(60,10,90,0)');
+  ctx.fillStyle = tyGrad;
+  ctx.fillRect(PAD.left, L.tyrannyTop, L.cW, L.tyrannyBot - L.tyrannyTop);
+
+  // Chaos zone — dark red tint
+  const chGrad = safeLinGrad(0, L.chaosTop, 0, L.chaosBot); if (!chGrad) return;
+  chGrad.addColorStop(0, 'rgba(100,15,15,0)');
+  chGrad.addColorStop(1, 'rgba(100,15,15,0.35)');
+  ctx.fillStyle = chGrad;
+  ctx.fillRect(PAD.left, L.chaosTop, L.cW, L.chaosBot - L.chaosTop);
+
+  // Pole labels
+  ctx.font = '700 10px Cinzel, serif';
+  ctx.letterSpacing = '0.15em';
+  ctx.fillStyle = 'rgba(160,64,64,0.45)';
+  ctx.textAlign = 'left';
+  ctx.fillText('ANARCHY / CHAOS', PAD.left + 6, L.chaosBot - 8);
+  ctx.fillStyle = 'rgba(140,80,210,0.45)';
+  ctx.fillText('TYRANNY / CONTROL', PAD.left + 6, L.tyrannyTop + 16);
+  ctx.fillStyle = 'rgba(201,168,76,0.3)';
+  ctx.fillText('REPUBLIC', PAD.left + 6, L.centerY - 4);
+
+  // ── THE RIVER ──
+  const riverGrad = safeLinGrad(0, L.riverY, 0, L.riverY + L.riverH); if (!riverGrad) return;
+  riverGrad.addColorStop(0,   'rgba(25,18,8,0.95)');
+  riverGrad.addColorStop(0.5, 'rgba(35,25,10,0.98)');
+  riverGrad.addColorStop(1,   'rgba(25,18,8,0.95)');
+  ctx.fillStyle = riverGrad;
+  ctx.fillRect(PAD.left, L.riverY, L.cW, L.riverH);
+  ctx.strokeStyle = 'rgba(201,168,76,0.25)';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(PAD.left, L.riverY, L.cW, L.riverH);
+
+  // River shimmer lines
+  ctx.save();
+  ctx.globalAlpha = 0.06;
+  ctx.strokeStyle = '#c9a84c';
+  ctx.lineWidth = 1;
+  for (let i = 0; i < 5; i++) {
+    const y = L.riverY + (i + 1) * (L.riverH / 6);
+    ctx.beginPath(); ctx.moveTo(PAD.left, y); ctx.lineTo(PAD.left + L.cW, y); ctx.stroke();
+  }
+  ctx.restore();
+
+  // Century markers on river
+  ctx.font = '9px Cinzel, serif';
+  ctx.fillStyle = 'rgba(201,168,76,0.3)';
+  ctx.textAlign = 'center';
+  for (let yr = 400; yr <= END_YEAR; yr += 200) {
+    const x = xOfYear(yr, L.cW);
+    if (x < PAD.left || x > PAD.left + L.cW) continue;
+    ctx.fillText(yr + ' CE', x, L.centerY + 5);
+    ctx.fillStyle = 'rgba(201,168,76,0.12)';
+    ctx.fillRect(x - 0.5, L.riverY, 1, L.riverH);
+    ctx.fillStyle = 'rgba(201,168,76,0.3)';
+  }
+
+  // ── EVENT GLOWS & MARKERS ──
+  EVENTS.forEach(ev => {
+    if (ev.year > viewYear) return;
+    const x   = xOfYear(ev.year, L.cW);
+    if (x < PAD.left || x > PAD.left + L.cW) return;
+
+    const age    = viewYear - ev.year;
+    const fade   = Math.pow(0.5, age / (ev.halfLife * 0.8));
+    const alpha  = Math.max(0, Math.min(1, fade));
+    if (alpha < 0.015) return;
+
+    const isAbove = ev.type === 'tyranny' || ev.type === 'republic';
+    const baseY   = isAbove ? L.riverY : L.riverY + L.riverH;
+
+    let color;
+    if      (ev.type === 'chaos')    color = `rgba(200,64,64,${alpha})`;
+    else if (ev.type === 'tyranny')  color = `rgba(160,80,220,${alpha})`;
+    else                             color = `rgba(70,180,110,${alpha})`;
+
+    // Glow halo
+    const glowSize = 18 + ev.impact * 0.3 * alpha;
+    const glowY    = isAbove ? baseY - glowSize * 0.6 : baseY + glowSize * 0.6;
+    const radGrad  = safeRadGrad(x, baseY, 0, x, baseY, glowSize * 2.5); if (!radGrad) return;
+    const glowBase = ev.type === 'chaos' ? '160,40,40' : ev.type === 'tyranny' ? '120,60,190' : '50,150,80';
+    radGrad.addColorStop(0,   `rgba(${glowBase},${alpha * 0.5})`);
+    radGrad.addColorStop(0.4, `rgba(${glowBase},${alpha * 0.15})`);
+    radGrad.addColorStop(1,   `rgba(${glowBase},0)`);
+    ctx.fillStyle = radGrad;
+    ctx.beginPath();
+    ctx.ellipse(x, baseY, glowSize * 2.5, glowSize * 1.2, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Stem line from river edge upward/downward
+    const stemLen  = 12 + ev.impact * 0.25 * alpha;
+    const stemEndY = isAbove ? baseY - stemLen : baseY + stemLen;
+    ctx.strokeStyle = color;
+    ctx.lineWidth   = 1 + alpha;
+    ctx.beginPath();
+    ctx.moveTo(x, baseY);
+    ctx.lineTo(x, stemEndY);
+    ctx.stroke();
+
+    // Dot
+    ctx.fillStyle = color;
+    ctx.shadowColor = color.replace(/[\d.]+\)$/, '1)');
+    ctx.shadowBlur  = 6 * alpha;
+    ctx.beginPath();
+    ctx.arc(x, stemEndY, 3 + alpha * 2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // Label (only if alpha > 0.2)
+    if (alpha > 0.2) {
+      ctx.save();
+      ctx.globalAlpha = Math.min(1, (alpha - 0.2) * 1.8);
+      ctx.translate(x, stemEndY + (isAbove ? -5 : 5));
+      ctx.rotate(isAbove ? -Math.PI / 3 : Math.PI / 3);
+      ctx.textAlign = isAbove ? 'left' : 'left';
+      ctx.font = `italic ${8 + alpha * 2}px EB Garamond, serif`;
+      ctx.fillStyle = color.replace(/[\d.]+\)$/, '0.9)');
+      ctx.fillText(ev.name + ' (' + ev.year + ')', 0, 0);
+      ctx.restore();
+    }
+  });
+
+  // ── PENDULUM POSITION CURVE ──
+  // Draw the full curve up to viewYear
+  const visiblePts = CURVE.filter(pt => pt.year <= viewYear + 1);
+  if (visiblePts.length > 1) {
+    // Shadow/glow pass
+    ctx.save();
+    ctx.shadowColor = 'rgba(201,168,76,0.5)';
+    ctx.shadowBlur  = 8;
+    ctx.strokeStyle = 'rgba(201,168,76,0.7)';
+    ctx.lineWidth   = 2;
+    ctx.lineJoin    = 'round';
+    ctx.beginPath();
+    visiblePts.forEach((pt, i) => {
+      const x = xOfYear(pt.year, L.cW);
+      const y = yOfPos(pt.position, L);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // ── NOW MARKER ──
+  const nowX = xOfYear(viewYear, L.cW);
+  const nowState = computeStateAt(viewYear);
+  const nowY = yOfPos(nowState.position, L);
+
+  // Vertical now line
+  ctx.strokeStyle = 'rgba(201,168,76,0.4)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(nowX, L.tyrannyTop);
+  ctx.lineTo(nowX, L.chaosBot);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Bob dot
+  ctx.save();
+  ctx.shadowColor = '#c9a84c';
+  ctx.shadowBlur  = 16;
+  ctx.fillStyle   = '#c9a84c';
+  ctx.beginPath();
+  ctx.arc(nowX, nowY, 7, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+
+  // Inner dot
+  ctx.fillStyle = 'rgba(255,240,180,0.9)';
+  ctx.beginPath();
+  ctx.arc(nowX, nowY, 2.5, 0, Math.PI * 2);
+  ctx.fill();
+
+  // ── X-AXIS RULER ──
+  ctx.strokeStyle = 'rgba(201,168,76,0.2)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(PAD.left, L.chaosBot);
+  ctx.lineTo(PAD.left + L.cW, L.chaosBot);
+  ctx.stroke();
+
+  for (let yr = 400; yr <= END_YEAR; yr += 100) {
+    const x = xOfYear(yr, L.cW);
+    if (x < PAD.left || x > PAD.left + L.cW) continue;
+    ctx.fillStyle = 'rgba(201,168,76,0.25)';
+    ctx.font = '8px Cinzel, serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(yr, x, L.chaosBot + 14);
+    ctx.fillRect(x - 0.5, L.chaosBot, 1, 5);
+  }
+
+  // ── Update info panels ──
+  updateInfo(viewYear, nowState);
+}
+
+// ── INFO PANELS ───────────────────────────────────────────────────────────
+function positionLabel(pos) {
+  if (pos >  70) return 'TYRANNY';
+  if (pos >  40) return 'THEOCRACY';
+  if (pos >  20) return 'MONARCHY';
+  if (pos >   8) return 'OLIGARCHY';
+  if (pos >  -8) return 'REPUBLIC';
+  if (pos > -20) return 'DEMOCRACY';
+  if (pos > -40) return 'TRIBALISM';
+  if (pos > -70) return 'ANARCHY';
+  return 'TOTAL COLLAPSE';
+}
+
+function positionColor(pos) {
+  if (pos > 30)  return 'var(--tyranny-bright)';
+  if (pos < -30) return 'var(--chaos-bright)';
+  return 'var(--republic-bright)';
+}
+
+function updateInfo(year, state) {
+  const yr = Math.round(year);
+  document.getElementById('yearDisplay').textContent = yr + ' CE';
+
+  document.getElementById('chaosCharge').textContent   = Math.round(state.chaosCharge) + '%';
+  document.getElementById('tyrannyCharge').textContent = Math.round(state.tyrannyCharge) + '%';
+
+  const pos = Math.round(state.position);
+  const label = positionLabel(pos);
+  document.getElementById('pendulumPos').textContent = label;
+  document.getElementById('pendulumPos').style.color = positionColor(pos);
+
+  // Find nearest recent chaos event
+  const recentChaos = EVENTS
+    .filter(e => e.type === 'chaos' && e.year <= year)
+    .sort((a,b) => b.year - a.year)[0];
+  const recentTyranny = EVENTS
+    .filter(e => e.type === 'tyranny' && e.year <= year)
+    .sort((a,b) => b.year - a.year)[0];
+
+  document.getElementById('chaosDesc').textContent = recentChaos
+    ? `Last major event: ${recentChaos.name} (${recentChaos.year}), ${Math.round(year - recentChaos.year)} yrs ago`
+    : 'No major events yet';
+  document.getElementById('tyrannyDesc').textContent = recentTyranny
+    ? `Last major event: ${recentTyranny.name} (${recentTyranny.year}), ${Math.round(year - recentTyranny.year)} yrs ago`
+    : 'No major events yet';
+
+  const pendulumAge = Math.round(year - (recentChaos?.year || START_YEAR));
+  document.getElementById('pendulumDesc').textContent =
+    `Position score: ${pos > 0 ? '+' : ''}${pos} / 100`;
+
+  // Recent events display
+  updateRecentEvents(year);
+
+  // Narrative
+  updateNarrative(year, state, recentChaos, recentTyranny);
+}
+
+function updateRecentEvents(year) {
+  const container = document.getElementById('recentList');
+
+  // Get all events that have occurred, sorted most recent first
+  const past = EVENTS
+    .filter(e => e.year <= year)
+    .sort((a, b) => b.year - a.year)
+    .slice(0, 6); // show last 6
+
+  if (past.length === 0) {
+    container.innerHTML = '<div style="font-style:italic;font-size:0.82rem;color:var(--text-dim);padding:0.4rem 0.6rem;">No events yet in this period.</div>';
+    return;
+  }
+
+  const colorMap = {
+    chaos:    '#d44040',
+    tyranny:  '#a060d8',
+    republic: '#50b870',
+  };
+  const typeLabel = {
+    chaos:    'CHAOS',
+    tyranny:  'TYRANNY',
+    republic: 'REPUBLIC',
+  };
+
+  container.innerHTML = past.map(ev => {
+    const ago   = Math.round(year - ev.year);
+    const hl    = ev.halfLife;
+    const decay = Math.round(ev.impact * Math.pow(0.5, ago / hl));
+    const color = colorMap[ev.type];
+    const agoTxt = ago === 0 ? 'this year' : ago === 1 ? '1 year ago' : `${ago} yrs ago`;
+    const chargePct = Math.max(0, decay);
+
+    return `
+    <div class="recent-event">
+      <div class="recent-dot" style="background:${color};color:${color}"></div>
+      <div>
+        <div class="recent-year">${ev.year} CE</div>
+        <div class="recent-ago">${agoTxt}</div>
+      </div>
+      <div>
+        <div class="recent-name">${ev.name}
+          <span style="font-family:'EB Garamond',serif;font-size:0.68rem;font-weight:400;color:${color};opacity:0.75;margin-left:0.4rem;">${typeLabel[ev.type]}</span>
+        </div>
+        <div class="recent-note">${ev.note}</div>
+      </div>
+      <div class="recent-charge" style="color:${color}">
+        ${chargePct}%<br>
+        <span style="font-size:0.6rem;color:var(--text-dim);font-style:italic;">charge</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateNarrative(year, state, rc, rt) {
+  const yr  = Math.round(year);
+  const pos = state.position;
+  const cc  = Math.round(state.chaosCharge);
+  const tc  = Math.round(state.tyrannyCharge);
+  let txt   = `<strong>${yr} CE — </strong>`;
+
+  if (yr < 500) {
+    txt += `The Western Roman order is ${yr < 476 ? 'fracturing' : 'gone'}. Centuries of civilization dissolve into competing kingdoms. The memory of what was lost will shape European politics for a thousand years.`;
+  } else if (pos > 60) {
+    txt += `The pendulum has swung hard toward tyranny. Chaos memory is strong (${cc}%) — the civilization remembers disorder and is willing to pay almost any price for order. The archetype summoned in this moment is the Despot or the Prophet.`;
+  } else if (pos < -60) {
+    txt += `The pendulum has swung toward anarchy. Tyranny memory is strong (${tc}%) — the civilization fears control above all and dissolves institutional bonds. The archetype summoned here is the Agitator.`;
+  } else if (pos > 25) {
+    txt += `The bob sits in monarchical or oligarchic territory. ${cc > tc ? `Chaos memory (${cc}%) outweighs tyranny memory (${tc}%), pushing the bob rightward toward order.` : `Memory is more balanced, but the Machiavellian finds fertile ground near the powerful.`}`;
+  } else if (pos < -25) {
+    txt += `The bob drifts toward tribalism. ${tc > cc ? `Tyranny memory (${tc}%) outweighs chaos memory (${cc}%), pushing the bob leftward toward freedom.` : `The institutional framework is weakening.`}`;
+  } else {
+    txt += `The bob rests near the Republic — the hardest position to maintain. ${rc ? `The ${rc.name} (${rc.year}) still charges the left pole` : ''}${rc && rt ? ', and ' : ''}${rt ? `the ${rt.name} (${rt.year}) still charges the right` : ''}. Both warnings are active. The center holds — for now.`;
+  }
+
+  document.getElementById('narrative').innerHTML = txt;
+}
+
+// ── SCRUBBER ──────────────────────────────────────────────────────────────
+const scrubber = document.getElementById('scrubber');
+scrubber.addEventListener('input', function() {
+  currentPct = this.value / 100;
+  const pct = ((this.value - this.min) / (this.max - this.min) * 100).toFixed(1);
+  this.style.setProperty('--p', pct + '%');
+  draw();
+});
+
+// ── YEAR INPUT ────────────────────────────────────────────────────────────
+function snapToYear(yr) {
+  yr = Math.max(300, Math.min(2025, Math.round(yr)));
+  currentPct = (yr - START_YEAR) / (END_YEAR - START_YEAR);
+  const pct = (currentPct * 100).toFixed(1);
+  scrubber.value = currentPct * 100;
+  scrubber.style.setProperty('--p', pct + '%');
+  document.getElementById('yearInput').value = yr;
+  draw();
+}
+
+document.getElementById('goBtn').addEventListener('click', function() {
+  const val = parseInt(document.getElementById('yearInput').value);
+  if (!isNaN(val)) snapToYear(val);
+});
+
+document.getElementById('yearInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    const val = parseInt(this.value);
+    if (!isNaN(val)) snapToYear(val);
+  }
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+window.addEventListener('resize', () => { resize(); });
+// Defer until browser has laid out the canvas
+requestAnimationFrame(() => requestAnimationFrame(() => resize()));
+const initPct = ((scrubber.value - scrubber.min) / (scrubber.max - scrubber.min) * 100).toFixed(1);
+scrubber.style.setProperty('--p', initPct + '%');
+
+    </script>
+  </div>
+  <!-- ══ END LIVING TIMELINE ══ -->
+
+  <div class="breakdown-section">
+    <h3>The Nature of the Swing</h3>
+    <p>Memory is not symmetric, and neither is its decay. A civilization that has just emerged from decades of tyranny carries a powerful charge pushing it toward liberty — but that charge weakens with each generation that did not live through it. The children of survivors remember the stories. The grandchildren know them as history. The great-grandchildren inherit only the institutions built in response, and those institutions begin to feel like arbitrary constraints rather than hard-won safeguards. The memory field weakens. The repulsion fades. And the pendulum, no longer held back by the charge, begins to drift back toward the pole that destroyed their ancestors.</p>
+
+    <h3>What This Theory Predicts</h3>
+    <p>Chart the intensity and recency of a civilization's trauma at each pole, and you can predict the direction and velocity of the next swing. A society that has experienced recent chaos will tolerate extraordinary concentrations of power — because the memory of powerlessness is fresher than the memory of oppression. A society that has experienced recent tyranny will dismantle institutions faster than wisdom allows — because the memory of control is fresher than the memory of collapse. The manipulator who understands the asymmetry of the memory field knows exactly which fear to invoke and which to suppress. This is perhaps the Machiavellian's deepest art: not reading the room, but reading the field beneath the room.</p>
+  </div>
+
+  <div class="divider"><span>✦</span></div>
+
+  <div class="divider"><span>⚙</span></div>
+
+  <p class="section-title">The Deeper Mechanics</p>
+
+  <div class="breakdown-section">
+    <h3>I. Memory as Magnetic Force</h3>
+    <p>The pendulum does not swing in a vacuum. At each pole of the spectrum there exists a memory field — the accumulated emotional, cultural, and institutional weight of what a civilization has actually lived through. This field is not information. It is charge. A civilization that has recently survived anarchy carries a strong repulsive charge at the left pole — it feels the pull toward chaos and recoils from it instinctively, below the level of rational argument. A civilization that has recently survived tyranny carries a strong repulsive charge at the right pole — it maintains guardrails, builds checks and balances, treats encroachments on liberty with visceral alarm.</p>
+
+    <p>When memory is strong, the poles push hard. The bob feels the extremes and resists them. The center holds because both dangers are real and present in the body of the civilization. But memory fades. The generation that lived through the extreme dies. The generation that was told about it treats it as history. The generation that was not told about it at all treats it as myth. With each step, the charge weakens. The pole loses its warning force. What was once unthinkable becomes thinkable, then debatable, then possible, then inevitable.</p>
+
+    <p>This is why civilizations are most vulnerable to an extreme approximately two to three generations after their last encounter with it. Long enough for the lived memory to die. Not long enough for new institutional memory to have calcified. The window of forgetting is the window of summoning.</p>
+
+    <p>Critically, memory is asymmetric. Whichever extreme was most recently and most viscerally experienced generates the stronger charge — and a civilization fleeing one pole will swing toward the opposite with less resistance than it otherwise would. Weimar Germany did not fall to Hitler despite its trauma. It fell because the memory of chaos was so overwhelming that it temporarily extinguished the repulsion from authority. The bob fled one magnetic field directly into the arms of the other. The manipulator who understands the asymmetry of a civilization's memory field knows exactly which fear to invoke and which to suppress — and this is perhaps the Machiavellian's deepest art.</p>
+
+    <h3>II. The Summoning — How Archetypes Are Called Forth</h3>
+    <p>Leaders do not create the conditions that produce them. The conditions produce the leaders. This is the summoning principle, and it is the most disturbing implication of the entire theory.</p>
+
+    <p>When the memory field weakens and the pendulum swings toward a pole, it does not simply arrive at a political position. It generates a vacancy — a precise shape carved out of the civilization's collective psychology. The accumulated fear, exhaustion, humiliation, rage, or longing for meaning reaches a threshold, and the vacancy crystallizes. It becomes a specific form: the Agitator who channels collective rage, the Despot who promises salvation from chaos, the Prophet who offers total meaning to the spiritually starved. These forms do not appear because a particular talented person happened to be available. They appear because the civilization carved the mold and the right material flowed into it.</p>
+
+    <p>This is why destroying the creature rarely solves the problem. Remove the tyrant and if the conditions persist, another forms. The summoning is the real event. The creature is the symptom. You cannot solve the manifestation without solving the state that called it forth — the weakened memory, the fraying institutions, the particular asymmetry of fear and hope that prepared the mold. Every civilization that has executed its tyrant without addressing the conditions that produced him has watched a second tyrant rise from the same soil.</p>
+
+    <p>The summoning operates at every scale of the nested system. Families summon their own archetypes. The domineering patriarch is called forth by a family's accumulated anxiety and need for certainty. The black sheep is summoned by the family's need to externalize its shame. The scapegoat is a creature of collective psychological mechanics just as surely as the dictator is. The same dynamic, scaled across ten orders of magnitude — from the individual to the world.</p>
+
+    <h3>III. The Nested Pendulums — Fractal Civilization</h3>
+    <p>The pendulum does not describe a single phenomenon. It describes a fractal structure — the same dynamic operating simultaneously at every scale of human organization, each nested inside the one above it, each influencing and being influenced by all the others.</p>
+
+    <p>At the macro level, a world pendulum swings across centuries — the arc of global civilizational order measured in half-millennia. Nested inside it, civilizational pendulums swing across generations within a single civilization. Inside those, national pendulums swing across decades. Inside those, institutional pendulums — corporations, churches, political parties — swing across years. Communities within years. Families within lifetimes. Individuals within a single life.</p>
+
+    <p>The crucial structural principle is this: each bob is the string of the pendulum above it. A family's position on the spectrum is both shaped by and transmitted to the national pendulum. A nation's collective state is both a product of and a contributor to the civilizational pendulum. The causality runs in both directions — top down and bottom up simultaneously. The macro pendulum sets the range of motion available to smaller ones. A civilization swinging hard toward tyranny makes it nearly impossible for nations within it to sustain a Republic — they get dragged. But nested pendulums can resist their parent for a time, which is precisely what we see when a free city persists within an empire, or a healthy family maintains its integrity inside a collapsing society.</p>
+
+    <p>And the bottom-up causality is equally real. Enough micro pendulums swinging in the same direction can eventually move the macro. Every large civilizational swing began as countless small ones — families, communities, institutions — all drifting the same direction until the aggregate force became irresistible. This is why the diagnostic question is not only "where is the national pendulum?" but "where are the families?" The smallest nested pendulums move first. They are the earliest warning system available to anyone paying attention.</p>
+
+    <h3>IV. The Center Requires the Threat of Both Poles</h3>
+    <p>The final and perhaps most counterintuitive principle: the Republic does not merely coexist with the threat of its extremes. It requires them. Not as enemies to be destroyed, but as living forces whose credible existence provides the tension that holds the center together.</p>
+
+    <p>A civilization that has forgotten what anarchy feels like loses the will to maintain institutions. Why build the difficult architecture of law and civic participation if there is no felt sense of what dissolves without it? A civilization that has forgotten what tyranny feels like loses the will to resist encroachment. Why fight for freedoms that feel eternal and costless? The memory of the extremes is not merely cautionary — it is load-bearing. It is the tension in the suspension bridge. Remove it and the structure does not gently settle. It collapses toward whichever pole still has its charge.</p>
+
+    <p>The center is not the easy place. It is the hardest. Every other point on the spectrum is simpler to sustain because it has surrendered to one of the poles. The Tyrant needs no balance. The Anarchist needs no institutions. But the Republic must hold the rope from both ends simultaneously, forever, against the natural magnetic pull of both extremes and the inevitable decay of the memory fields that empower the resistance. The center costs more than most civilizations are willing to pay indefinitely. And that cost — not invasion, not catastrophe, not conspiracy — is the true explanation for why Republics are rare and mortal.</p>
+  </div>
+
+  <div class="divider"><span>✦</span></div>
+
+  <div class="breakdown-section" style="text-align:center; max-width:720px; margin:0 auto;">
+    <p class="section-title" style="margin-bottom:1.5rem;">A Final Word</p>
+    <p>This theory does not offer comfort. It does not promise that the right leaders, the right institutions, or the right ideology will finally stop the swing. The pendulum has never stopped. It will not stop. What it offers instead is something rarer and more useful than comfort: <em>orientation.</em> If you know where the pendulum is, you know where it is going. If you know what the memory field looks like, you know what it will summon. If you know which archetype is ascending, you know which one is about to be discarded — and you can decide, with open eyes, where you choose to stand.</p>
+    <p>The swing is not a tragedy. Tragedy is watching it happen without understanding it. The man who understands the pendulum is not free from it — no one is. But he is not surprised by it either. And in a world that will always be moving, the ability to read the motion is the closest thing to wisdom that politics allows.</p>
+    <p style="margin-top:1.8rem; font-family:'Cinzel',serif; font-size:0.7rem; letter-spacing:0.25em; color:rgba(201,168,76,0.45); text-transform:uppercase;">The pendulum swings. It has always swung. Now you can see it.</p>
+  </div>
+
+
+  <div class="divider"><span>⚙</span></div>
+
+  <style id="psim-styles">
+
+.psim {
+  --gold:        #c9a84c;
+  --gold-dim:    rgba(201,168,76,0.35);
+  --gold-faint:  rgba(201,168,76,0.08);
+  --chaos:       #c94040;
+  --chaos-dim:   rgba(201,64,64,0.35);
+  --order:       #7040c9;
+  --order-dim:   rgba(112,64,201,0.35);
+  --bg:          #070504;
+  --panel:       rgba(12,9,6,0.95);
+  --text:        #c8bfaf;
+  --text-dim:    rgba(200,191,175,0.5);
+  --mono:        'JetBrains Mono', monospace;
+  background:    #070504;
+  color:         #c8bfaf;
+  font-family:   'EB Garamond', serif;
+  font-size:     16px;
+  line-height:   1.7;
+  padding:       0;
+  margin:        0;
+}
+
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+
+.psim {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'EB Garamond', serif;
+  min-height: 100vh;
+  padding: 40px 20px 60px;
+.psim background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+}
+
+.psim .page { max-width: 1100px; margin: 0 auto; }
+
+.psim .header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+}
+.psim .eyebrow {
+  font-family: 'Cinzel', serif;
+  font-size: 0.58rem;
+  letter-spacing: 0.35em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+.psim .title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  color: var(--gold);
+  letter-spacing: 0.06em;
+  margin-bottom: 0.5rem;
+}
+.psim .subtitle {
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--text-dim);
+}
+
+/* Equation display */
+.psim .eq-block {
+  background: var(--panel);
+  border: 1px solid rgba(201,168,76,0.18);
+  border-radius: 3px;
+  padding: 20px 24px;
+  margin: 1.2rem 0;
+  font-family: var(--mono);
+  font-size: clamp(0.7rem, 1.4vw, 0.88rem);
+  color: rgba(201,168,76,0.85);
+  line-height: 2;
+  overflow-x: auto;
+}
+.psim .eq-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.52rem;
+  letter-spacing: 0.2em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.psim .eq-comment { color: rgba(201,168,76,0.3); font-size: 0.8em; }
+.psim .eq-var     { color: #c9a84c; }
+.psim .eq-op      { color: rgba(200,191,175,0.6); }
+.psim .eq-num     { color: #a0c8a0; }
+
+/* Controls panel */
+.psim .controls-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin: 1.5rem 0;
+}
+.psim .ctrl-group {
+  background: var(--panel);
+  border: 1px solid rgba(201,168,76,0.12);
+  border-radius: 3px;
+  padding: 14px 16px;
+}
+.psim .ctrl-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.5rem;
+  letter-spacing: 0.18em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.psim .ctrl-val {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--gold);
+}
+.psim input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(to right, var(--chaos-dim), rgba(201,168,76,0.3), var(--order-dim));
+  outline: none;
+  border-radius: 1px;
+  margin-top: 4px;
+}
+.psim input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 8px rgba(201,168,76,0.6);
+  cursor: pointer;
+}
+
+/* Simulation canvas */
+.psim .sim-wrap {
+  position: relative;
+  margin: 1.5rem 0;
+  background: var(--panel);
+  border: 1px solid rgba(201,168,76,0.18);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.psim .sim-canvas {
+  display: block;
+  width: 100%;
+}
+.psim .sim-overlay {
+  position: absolute;
+  top: 12px; left: 16px;
+  font-family: var(--mono);
+  font-size: clamp(0.55rem, 1vw, 0.7rem);
+  color: rgba(201,168,76,0.5);
+  line-height: 1.8;
+  pointer-events: none;
+}
+
+/* State readout */
+.psim .readout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 8px;
+  margin: 1rem 0;
+}
+.psim .readout-cell {
+  background: var(--panel);
+  border: 1px solid rgba(201,168,76,0.1);
+  border-radius: 2px;
+  padding: 10px 14px;
+  text-align: center;
+}
+.psim .readout-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.45rem;
+  letter-spacing: 0.18em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.psim .readout-val {
+  font-family: var(--mono);
+  font-size: clamp(0.85rem, 1.8vw, 1.1rem);
+  color: var(--gold);
+}
+
+/* Section headers */
+.psim .section-head {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.7rem, 1.4vw, 0.9rem);
+  letter-spacing: 0.18em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin: 2.5rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(201,168,76,0.12);
+}
+.psim .prose {
+  font-size: clamp(0.88rem, 1.6vw, 1.05rem);
+  line-height: 1.75;
+  color: var(--text-dim);
+  margin-bottom: 1rem;
+  max-width: 780px;
+}
+.psim .prose em { color: var(--gold); font-style: normal; }
+
+/* Buttons */
+.psim .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 1rem 0; }
+.psim .btn {
+  font-family: 'Cinzel', serif;
+  font-size: 0.52rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  border-radius: 2px;
+  border: 1px solid rgba(201,168,76,0.3);
+  background: rgba(201,168,76,0.06);
+  color: var(--gold);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.psim .btn:hover { background: rgba(201,168,76,0.14); border-color: var(--gold); }
+.psim .btn.active { background: rgba(201,168,76,0.18); border-color: var(--gold); }
+
+/* Scenario presets */
+.psim .presets { display: flex; gap: 8px; flex-wrap: wrap; margin: 0.8rem 0 1.5rem; }
+.psim .preset-btn {
+  font-family: 'EB Garamond', serif;
+  font-size: 0.82rem;
+  font-style: italic;
+  padding: 5px 14px;
+  border-radius: 2px;
+  border: 1px solid rgba(201,168,76,0.2);
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.psim .preset-btn:hover { border-color: rgba(201,168,76,0.5); color: var(--gold); }
+
+/* Archetype badge */
+.psim .archetype-badge {
+  display: inline-block;
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 2px;
+  border: 1px solid;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+/* Memory field chart */
+.psim .memory-chart {
+  background: var(--panel);
+  border: 1px solid rgba(201,168,76,0.12);
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+.psim .memory-canvas { display: block; width: 100%; }
+
+  </style>
+
+  <div class="psim" id="pendulum-sim-section">
+    
+  <div style="max-width:780px;margin:0 auto 2.5rem;padding:0 1rem;text-align:center;">
+    <div style="font-family:'Cinzel',serif;font-size:0.5rem;letter-spacing:0.25em;color:rgba(201,168,76,0.45);text-transform:uppercase;margin-bottom:1.2rem;">Observe &amp; Interact</div>
+    <p style="font-family:'EB Garamond',serif;font-size:1.08rem;font-style:italic;color:rgba(200,191,175,0.75);line-height:1.85;margin:0;">
+      The theory above is a map. What follows is the territory made navigable — a live mathematical simulation of the Pendulum of Authority, calibrated to Western civilizational history. Select a scenario, watch the memory field shape the swing, and then inject your own events to see what the model does. The nested scale shows how the same forces register differently depending on whether you are measuring centuries or days.
+    </p>
+  </div>
+
+    <div class="page">
+
+  <div class="title">Mathematical Model</div>
+    <div class="subtitle">A playable companion to the theory</div>
+    <div style="font-family:'Cinzel',serif;font-size:0.52rem;letter-spacing:0.2em;color:rgba(201,168,76,0.4);text-transform:uppercase;margin-top:0.6rem;">Scenarios Calibrated to Western Civilizational History</div>
+  </div>
+
+  <!-- ── EQUATIONS ── -->
+  <div class="section-head" style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+    <span>The Formal System</span>
+    <button onclick="toggleMath()" id="mathToggleBtn"
+      style="font-family:'Cinzel',serif;font-size:0.44rem;letter-spacing:0.15em;text-transform:uppercase;
+             background:transparent;border:1px solid rgba(201,168,76,0.25);border-radius:2px;
+             color:rgba(201,168,76,0.5);padding:4px 12px;cursor:pointer;white-space:nowrap;
+             transition:all 0.2s;">
+      Show Math ▾
+    </button>
+  </div>
+
+  <div id="mathPanel" style="display:none;">
+  <p class="prose">The Pendulum of Authority is modeled as a <em>damped nonlinear oscillator</em> driven by a memory field. The position P(t) ∈ [−1, +1] represents the civilizational state, where −1 is pure anarchy and +1 is pure tyranny. The system has four coupled components.</p>
+
+  <div class="eq-label">I — Pendulum Equation of Motion</div>
+  <div class="eq-block">
+<span class="eq-var">P</span><span class="eq-op">''</span>(t) <span class="eq-op">=</span> <span class="eq-op">−</span><span class="eq-var">ω²</span> · sin(<span class="eq-var">P</span>(t)) <span class="eq-op">−</span> <span class="eq-var">γ</span> · <span class="eq-var">P</span><span class="eq-op">'</span>(t) <span class="eq-op">+</span> <span class="eq-var">F_mem</span>(t)
+<span class="eq-comment">  // ω = natural frequency  γ = damping coefficient  F_mem = memory field force</span>
+  </div>
+
+  <div class="eq-label">II — Memory Field Force</div>
+  <div class="eq-block">
+<span class="eq-var">F_mem</span>(t) <span class="eq-op">=</span> <span class="eq-var">M_c</span>(t) <span class="eq-op">−</span> <span class="eq-var">M_o</span>(t)
+<span class="eq-comment">  // Net force = chaos memory charge minus order memory charge
+  // Positive F_mem pushes toward order; negative pushes toward chaos</span>
+  </div>
+
+  <div class="eq-label">III — Memory Charge Decay</div>
+  <div class="eq-block">
+<span class="eq-var">M_c</span>(t) <span class="eq-op">=</span> <span class="eq-var">M_c0</span> · e<span class="eq-op">^(−</span><span class="eq-var">λ_c</span> · t<span class="eq-op">)</span>
+<span class="eq-var">M_o</span>(t) <span class="eq-op">=</span> <span class="eq-var">M_o0</span> · e<span class="eq-op">^(−</span><span class="eq-var">λ_o</span> · e<span class="eq-op">)</span>
+<span class="eq-comment">  // M_c0, M_o0 = initial charge magnitudes (trauma intensity)
+  // λ_c, λ_o  = decay rates (how fast each memory fades per generation)</span>
+  </div>
+
+  <div class="eq-label">IV — Nested Scale Periods (Fractal Structure)</div>
+  <div class="eq-block">
+<span class="eq-var">T_n</span> <span class="eq-op">=</span> <span class="eq-var">T_1</span> · <span class="eq-var">r</span><span class="eq-op">^(</span>n <span class="eq-op">−</span> <span class="eq-num">1</span><span class="eq-op">)</span>   <span class="eq-comment">// n = 1 (World) → 7 (Individual)</span>
+<span class="eq-var">P_n</span>(t) <span class="eq-op">=</span> <span class="eq-var">P_n-1</span>(t <span class="eq-op">−</span> <span class="eq-var">τ_n</span>) <span class="eq-op">+</span> <span class="eq-var">ε_n</span>(t)
+<span class="eq-comment">  // Each nested level inherits parent position with lag τ_n and local noise ε_n
+  // r ≈ 0.35 (ratio between scale periods)
+  // T_1 ≈ 500 years (World), T_7 ≈ months (Individual)</span>
+  </div>
+
+  <div class="eq-label">V — Archetype Mapping</div>
+  <div class="eq-block">
+<span class="eq-var">A</span>(t) <span class="eq-op">=</span> <span class="eq-op">{</span>
+  Anarchy       <span class="eq-op">if</span>  <span class="eq-var">P</span>(t) <span class="eq-op">∈</span> [<span class="eq-op">−</span><span class="eq-num">1.00</span>, <span class="eq-op">−</span><span class="eq-num">0.67</span>)
+  Tribalism     <span class="eq-op">if</span>  <span class="eq-var">P</span>(t) <span class="eq-op">∈</span> [<span class="eq-op">−</span><span class="eq-num">0.67</span>, <span class="eq-op">−</span><span class="eq-num">0.33</span>)
+  Democracy     <span class="eq-op">if</span>  <span class="eq-var">P</span>(t) <span class="eq-op">∈</span> [<span class="eq-op">−</span><span class="eq-num">0.33</span>, <span class="eq-op">−</span><span class="eq-num">0.05</span>)
+  Republic      <span class="eq-op">if</span>  <span class="eq-var">P</span>(t) <span class="eq-op">∈</span> [<span class="eq-op">−</span><span class="eq-num">0.05</span>,  <span class="eq-num">0.05</span>]
+  Oligarchy     <span class="eq-op">if</span>  <span class="eq-var">P</span>(t) <span class="eq-op">∈</span> ( <span class="eq-num">0.05</span>,  <span class="eq-num">0.33</span>]
+  Monarchy      <span class="eq-op">if</span>  <span class="eq-var">P</span>(t) <span class="eq-op">∈</span> ( <span class="eq-num">0.33</span>,  <span class="eq-num">0.67</span>]
+  Tyranny       <span class="eq-op">if</span>  <span class="eq-var">P</span>(t) <span class="eq-op">∈</span> ( <span class="eq-num">0.67</span>,  <span class="eq-num">1.00</span>]
+<span class="eq-op">}</span>
+  </div>
+
+  </div><!-- /mathPanel -->
+
+  <!-- ── SIMULATION ── -->
+  <div class="section-head">Live Simulation</div>
+  <p class="prose">Pick a scenario and press play. Watch the pendulum track history in real time — each event fires a memory charge that shapes what comes next. When it ends, <strong>inject your own events</strong> and see what the model does. The prediction scenario runs to 2100; try firing a chaos or order shock in 2030 and watch all seven scales respond.</p>
+
+  <!-- ── SCENARIO SELECTOR ── -->
+  <div style="font-family:'Cinzel',serif; font-size:0.48rem; letter-spacing:0.2em; color:var(--gold-dim); text-transform:uppercase; margin-bottom:8px;">Select Historical Scenario</div>
+  <div class="presets" id="scenarioBtns">
+    <button class="preset-btn active" data-key="french" onclick="loadScenario('french', this)">French Revolution 1789–1815</button>
+    <button class="preset-btn" data-key="weimar" onclick="loadScenario('weimar', this)">Weimar → Third Reich 1919–1945</button>
+    <button class="preset-btn" data-key="coldwar" onclick="loadScenario('coldwar', this)">Cold War Western World 1945–1991</button>
+    <button class="preset-btn" data-key="modern" onclick="loadScenario('modern', this)">Modern America 1991–2026</button>
+    <button class="preset-btn" data-key="predict" onclick="loadScenario('predict', this)" style="border-color:rgba(112,64,201,0.6);color:rgba(160,120,220,0.95);font-weight:600;">⚑ Predict from March 2026</button>
+  </div>
+
+  <!-- ── PLAYBACK CONTROLS ── -->
+  <div style="display:flex; align-items:center; gap:14px; margin:1rem 0; flex-wrap:wrap;">
+    <div class="ctrl-group" style="flex:1; min-width:200px; padding:10px 14px;">
+      <div class="ctrl-label">Playback Speed <span class="ctrl-val" id="v_speed">1×</span></div>
+      <input type="range" id="s_speed" min="1" max="100" step="1" value="1"
+             style="background:linear-gradient(to right,rgba(201,168,76,0.3),rgba(201,168,76,0.7));">
+      <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--text-dim);margin-top:4px;">
+        <span>0.5 yr/s</span><span>2 yr/s</span><span>5 yr/s</span>
+      </div>
+    </div>
+    <div class="btn-row" style="margin:0;gap:8px;">
+      <button class="btn active" id="btnRun" onclick="toggleRun()">▶ Play</button>
+      <button class="btn" onclick="stopSim()">■ Stop</button>
+      <button class="btn" onclick="stepYear()">+1 Year</button>
+    </div>
+  </div>
+
+  <!-- ── YEAR DISPLAY + CURRENT EVENT ── -->
+  <div id="yearBanner" style="background:var(--panel);border:1px solid rgba(201,168,76,0.15);border-radius:3px;padding:10px 18px;margin:0.5rem 0;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+    <div>
+      <div style="font-family:'Cinzel',serif;font-size:0.45rem;letter-spacing:0.2em;color:var(--gold-dim);text-transform:uppercase;">Year</div>
+      <div id="yearDisp" style="font-family:'JetBrains Mono',monospace;font-size:1.6rem;color:var(--gold);letter-spacing:0.05em;">—</div>
+    </div>
+    <div style="flex:1;min-width:200px;">
+      <div style="font-family:'Cinzel',serif;font-size:0.45rem;letter-spacing:0.2em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:4px;">Active Event</div>
+      <div id="eventDisp" style="font-family:'EB Garamond',serif;font-size:0.95rem;font-style:italic;color:rgba(200,191,175,0.7);">—</div>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-family:'Cinzel',serif;font-size:0.45rem;letter-spacing:0.2em;color:var(--gold-dim);text-transform:uppercase;">Archetype</div>
+      <div id="rd_a" style="font-family:'Cinzel',serif;font-size:1rem;letter-spacing:0.1em;color:var(--gold);">—</div>
+    </div>
+  </div>
+
+  <!-- ── READOUT ROW ── -->
+  <div class="readout">
+    <div class="readout-cell"><div class="readout-label">Position P</div><div class="readout-val" id="rd_p">—</div></div>
+    <div class="readout-cell"><div class="readout-label">Velocity P'</div><div class="readout-val" id="rd_v">—</div></div>
+    <div class="readout-cell"><div class="readout-label">Chaos M_c</div><div class="readout-val" id="rd_mc">—</div></div>
+    <div class="readout-cell"><div class="readout-label">Order M_o</div><div class="readout-val" id="rd_mo">—</div></div>
+    <div class="readout-cell"><div class="readout-label">Net Field F</div><div class="readout-val" id="rd_f">—</div></div>
+    <div class="readout-cell"><div class="readout-label">Damping γ</div><div class="readout-val" id="rd_g">—</div></div>
+  </div>
+
+  <!-- ── MAIN PHASE PORTRAIT ── -->
+  <div class="sim-wrap" style="margin:1rem 0;">
+    <canvas id="simCanvas" class="sim-canvas" height="300"></canvas>
+  </div>
+
+  <!-- ── EVENT INJECT ── -->
+  <div class="section-head" style="margin-top:2rem;">⚡ Inject Your Own Event</div>
+  <p class="prose">This is where the model becomes yours. Pause the sim, fire a shock, and watch the pendulum respond. <strong>Chaos shocks</strong> push toward anarchy and tribalism. <strong>Order shocks</strong> push toward monarchy and tyranny. Try injecting a massive chaos event during Weimar 1931 and see if you can prevent 1933. Try an order shock in Modern America 2028. Intensity ×3 simulates a world-historical rupture.</p>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin:1rem 0;align-items:flex-end;">
+    <div class="ctrl-group" style="flex:1;min-width:160px;">
+      <div class="ctrl-label">Type</div>
+      <div style="display:flex;gap:6px;margin-top:6px;">
+        <button class="btn active" id="evtChaos" onclick="setEvtType('chaos')" style="flex:1;">Chaos</button>
+        <button class="btn" id="evtOrder" onclick="setEvtType('order')" style="flex:1;">Order</button>
+      </div>
+    </div>
+    <div class="ctrl-group" style="flex:2;min-width:200px;">
+      <div class="ctrl-label">Intensity <span class="ctrl-val" id="v_intensity">1.0</span></div>
+      <input type="range" id="s_intensity" min="0.1" max="3.0" step="0.1" value="1.0"
+             style="background:linear-gradient(to right,rgba(201,64,64,0.4),rgba(112,64,201,0.4));">
+    </div>
+    <div class="ctrl-group" style="flex:2;min-width:200px;">
+      <div class="ctrl-label">Label <span style="font-size:0.7rem;font-style:italic;color:var(--text-dim);">(optional)</span></div>
+      <input type="text" id="evtLabel" placeholder="e.g. Market crash" maxlength="40"
+             style="width:100%;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.2);border-radius:2px;padding:4px 8px;color:var(--gold);font-family:'EB Garamond',serif;font-size:0.9rem;outline:none;margin-top:4px;">
+    </div>
+    <button class="btn" onclick="injectEvent()" style="padding:10px 22px;align-self:flex-end;">⚡ Fire Event</button>
+  </div>
+
+  <!-- ── MEMORY FIELD CHART ── -->
+  <div class="section-head" style="margin-top:2rem;">Memory Field Decay</div>
+  <p class="prose">Chaos memory (red) and order memory (purple) over time. Event spikes are visible as sharp rises followed by exponential decay. The gold dashed line is the net force — when it crosses zero, the pendulum's bias reverses.</p>
+  <div class="memory-chart"><canvas id="memCanvas" class="memory-canvas" height="180"></canvas></div>
+
+  <!-- ── NESTED SCALE SIM ── -->
+  <div class="section-head" style="margin-top:2rem;">Nested Scale Response</div>
+  <p class="prose">Each scale level tracks the macro pendulum with its own lag and inertia. The Individual responds in days; the World takes centuries. Faster levels drive slower ones — individuals shift first, then families, communities, institutions, nations. Dashed lines show the gap to the current macro position; arrows show the pull each level feels from the faster scale below.</p>
+  <div class="sim-wrap"><canvas id="nestedCanvas" class="sim-canvas" height="260"></canvas></div>
+
+  <!-- ── PREDICTION PANEL ── -->
+  <div id="predPanel" style="display:none;background:rgba(112,64,201,0.06);border:1px solid rgba(112,64,201,0.25);border-radius:3px;padding:24px;margin:2rem 0;">
+    <div style="font-family:'Cinzel',serif;font-size:0.52rem;letter-spacing:0.2em;color:rgba(160,120,220,0.7);text-transform:uppercase;margin-bottom:14px;">Model Prediction</div>
+    <div id="predText" style="font-family:'EB Garamond',serif;font-size:1rem;font-style:italic;color:rgba(200,191,175,0.8);line-height:1.85;"></div>
+    <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(112,64,201,0.15);">
+      <div style="font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.15em;color:rgba(160,120,220,0.6);text-transform:uppercase;margin-bottom:8px;">Change the outcome — try firing events below</div>
+      <div style="font-family:'EB Garamond',serif;font-size:0.9rem;color:rgba(200,191,175,0.55);line-height:1.7;">
+        Fire a strong <span style="color:rgba(201,64,64,0.8);">chaos shock</span> around 2030 to simulate crisis or rupture.
+        Fire an <span style="color:rgba(48,144,112,0.8);">order shock</span> to model institutional restoration.
+        Watch how long each nested scale takes to register the change — the Individual responds in years, the World in centuries.
+        The model is a lens, not a prophecy.
+      </div>
+    </div>
+    <div style="margin-top:12px;font-family:'Cinzel',serif;font-size:0.42rem;letter-spacing:0.12em;color:rgba(160,120,220,0.25);text-transform:uppercase;">Parameters calibrated to Western civilizational history · This is a model, not a prediction</div>
+  </div>
+    <script>
+
+// ══════════════════════════════════════════════════════════════════════════════
+// PENDULUM OF AUTHORITY — Simulation Engine v2
+// Time unit: 1 year. Memory recharged by historical event spikes.
+// ══════════════════════════════════════════════════════════════════════════════
+
+// ── CONSTANTS ─────────────────────────────────────────────────────────────────
+function toggleMath() {
+  const panel = document.getElementById('mathPanel');
+  const btn   = document.getElementById('mathToggleBtn');
+  const open  = panel.style.display === 'none';
+  panel.style.display = open ? 'block' : 'none';
+  btn.textContent     = open ? 'Hide Math ▴' : 'Show Math ▾';
+  btn.style.color     = open ? 'rgba(201,168,76,0.8)' : 'rgba(201,168,76,0.5)';
+}
+
+const DT          = 0.1;         // integration step in years (finer = smoother)
+const MAX_HISTORY = 2000;        // max stored frames
+
+// ── ARCHETYPE MAP ─────────────────────────────────────────────────────────────
+function archetype(p) {
+  if (p < -0.67) return { name:'Anarchy',     color:'#c94040' };
+  if (p < -0.33) return { name:'Tribalism',   color:'#c06a20' };
+  if (p < -0.05) return { name:'Democracy',   color:'#309070' };
+  if (p <=  0.05) return { name:'Republic',    color:'#c9a84c' };
+  if (p <=  0.33) return { name:'Oligarchy',   color:'#3a60b8' };
+  if (p <=  0.67) return { name:'Monarchy',    color:'#7a40b8' };
+  return                  { name:'Tyranny',    color:'#8a1818' };
+}
+
+// ── SCENARIO DEFINITIONS ─────────────────────────────────────────────────────
+// Each scenario: startYear, endYear, omega, gamma (can vary), p0, v0
+// Events: { year, label, chaosDelta, orderDelta, gammaDelta }
+//   chaosDelta / orderDelta = spike added to running M_c / M_o accumulators
+//   gammaDelta = temporary change to damping (fades over 5 years)
+
+const SCENARIOS = {
+
+  french: {
+    name: 'French Revolution 1789\u20131815',
+    startYear: 1789, endYear: 1820,
+    omega: 0.20, gamma: 0.08,
+    p0: -0.42, v0: 0.08,
+    lc: 0.10, lo: 0.06,
+    mc0: 0.06, mo0: 0.42,
+    forceMult: 0.065,
+    events: [
+      { year:1789, label:'Storming of the Bastille \u2014 tyranny exposed, order memory discharged',     order:0.55 },
+      { year:1792, label:'War of First Coalition \u2014 external threat, chaos fear rises',              chaos:0.30 },
+      { year:1793, label:'Committee of Public Safety \u2014 Reign of Terror begins',                    posReset:0.62, velReset:0.0, mcReset:0.60, moReset:0.05 },
+      { year:1794, label:'Thermidorian Reaction \u2014 Terror ends, order memory discharged',           order:0.42 },
+      { year:1795, label:'Directory established \u2014 weak oligarchic rule',                           order:0.25 },
+      { year:1799, label:"Napoleon\u2019s coup \u2014 18 Brumaire, authority consolidates",             posReset:0.58, velReset:0.0, mcReset:0.42, moReset:0.06 },
+      { year:1803, label:'Napoleonic Wars begin \u2014 chaos fear recharged',                           chaos:0.25 },
+      { year:1804, label:'Napoleon crowned Emperor \u2014 Monarchy archetype',                          posReset:0.72, velReset:0.0, mcReset:0.50, moReset:0.05 },
+      { year:1812, label:'Russian campaign disaster \u2014 order memory rises (Napoleon failed us)',    order:0.40 },
+      { year:1814, label:'Napoleon abdicates \u2014 imperial collapse',                                 order:0.45 },
+      { year:1815, label:'Battle of Waterloo \u2014 final collapse, chaos returns',                     posReset:-0.42, velReset:-0.04, mcReset:0.08, moReset:0.46 },
+      { year:1815, label:'Congress of Vienna \u2014 conservative order restoration begins',                 order:0.28 },
+      { year:1818, label:'France readmitted to Concert of Europe \u2014 stabilisation',                     order:0.18 },
+    ]
+  },
+
+  weimar: {
+    name: 'Weimar \u2192 Third Reich 1919\u20131945',
+    startYear: 1919, endYear: 1945,
+    omega: 0.25, gamma: 0.05,
+    p0: -0.55, v0: 0.02,
+    lc: 0.07, lo: 0.05,
+    mc0: 0.08, mo0: 0.52,
+    forceMult: 0.052,
+    events: [
+      { year:1919, label:'Weimar Republic declared amid revolution and defeat',                         order:0.42 },
+      { year:1923, label:'Hyperinflation crisis \u2014 chaos fear drives demand for strong authority',  chaos:0.52 },
+      { year:1924, label:'Dawes Plan \u2014 economic stabilisation, brief calm',                        order:0.22 },
+      { year:1929, label:'Wall Street Crash \u2014 Great Depression, mass unemployment',                chaos:1.10 },
+      { year:1931, label:'German banking collapse \u2014 6 million unemployed, republic in freefall',       chaos:0.55 },
+      { year:1933, label:'Hitler appointed Chancellor \u2014 Enabling Act, republic dies',              posReset:0.78, velReset:0.0, mcReset:0.78, moReset:0.04 },
+      { year:1934, label:'Night of Long Knives \u2014 internal purge',                                  chaos:0.15 },
+      { year:1935, label:'Nuremberg Laws \u2014 totalitarian consolidation',                            chaos:0.14 },
+      { year:1938, label:'Kristallnacht \u2014 state terror institutionalised',                         chaos:0.16 },
+      { year:1939, label:'WWII begins \u2014 war economy, total authority',                             chaos:0.18 },
+      { year:1940, label:'Fall of France \u2014 Reich at peak power',                                   posReset:0.80, velReset:0.0, mcReset:0.70, moReset:0.03 },
+      { year:1942, label:'Stalingrad \u2014 order memory rises as regime fails its people',             order:0.30 },
+      { year:1944, label:'D-Day + July bomb plot \u2014 regime fracturing',                             order:0.42 },
+      { year:1945, label:'Total collapse of Third Reich \u2014 Anarchy archetype',                      posReset:-0.65, velReset:-0.06, mcReset:0.05, moReset:0.58 },
+    ]
+  },
+
+  coldwar: {
+    name: 'Cold War Western World 1945\u20131991',
+    startYear: 1945, endYear: 1991,
+    omega: 0.18, gamma: 0.32,
+    p0: 0.05, v0: 0.02,
+    lc: 0.08, lo: 0.08,
+    mc0: 0.22, mo0: 0.24,
+    forceMult: 0.044,
+    events: [
+      { year:1945, label:'WWII ends \u2014 West fractured; US in Oligarchy, Europe in ruins. War trauma + reconstruction mandate', chaos:0.38, order:0.20 },
+      { year:1947, label:'Truman Doctrine + Marshall Plan \u2014 Soviet threat charges chaos fear across all of West',             chaos:0.28 },
+      { year:1948, label:'Berlin Blockade \u2014 direct Soviet aggression, chaos fear spikes',                                    chaos:0.24 },
+      { year:1949, label:'NATO founded \u2014 Western institutional order established',                                           order:0.20 },
+      { year:1950, label:'Korean War \u2014 hot war, chaos fear at peak; Western rearmament begins',                              chaos:0.25 },
+      { year:1953, label:'Stalin dies \u2014 slight easing of tension, order memory',                                            order:0.12 },
+      { year:1956, label:'Hungary + Suez \u2014 West\'s hypocrisy exposed, order memory spike',                                  order:0.18 },
+      { year:1957, label:'Treaty of Rome \u2014 EEC founded, European integration deepens order',                                 order:0.14 },
+      { year:1961, label:'Berlin Wall built \u2014 Soviet aggression visible, chaos fear recharged',                              chaos:0.18 },
+      { year:1962, label:'Cuban Missile Crisis \u2014 peak existential fear across entire Western world',                         chaos:0.30 },
+      { year:1965, label:'Vietnam escalation \u2014 Western governments overreach, order memory rising',                          order:0.12 },
+      { year:1968, label:'May \'68 + Prague Spring + assassinations \u2014 pan-Western rebellion, order memory peaks',            order:0.28 },
+      { year:1973, label:'Oil shock + Watergate \u2014 economic chaos, institutional betrayal, order memory',                     order:0.22 },
+      { year:1975, label:'Fall of Saigon + Portugal revolution \u2014 Western confidence at nadir',                               order:0.14 },
+      { year:1976, label:'Stagflation + terrorism (Baader-Meinhof, IRA, Red Brigades) \u2014 chaos fear rebuilding',              chaos:0.16 },
+      { year:1978, label:'Winter of Discontent + Iran revolution + Afghanistan \u2014 chaos fear surges',                         chaos:0.18 },
+      { year:1979, label:'Thatcher elected \u2014 decisive mandate for order against chaos; Soviet threat renewed',                chaos:0.36 },
+      { year:1980, label:'Reagan elected + Solidarity in Poland \u2014 chaos fear dominant across West',                          chaos:0.28 },
+      { year:1983, label:'Able Archer + Euromissile crisis \u2014 nuclear fear, closest to war since Cuba',                       chaos:0.18 },
+      { year:1985, label:'Gorbachev takes power \u2014 reform signals ease tension, order memory rising',                         order:0.16 },
+      { year:1987, label:'INF Treaty \u2014 nuclear de-escalation, Western confidence rebuilds',                                  order:0.14 },
+      { year:1989, label:'Berlin Wall falls \u2014 liberation across Eastern Europe, Western model vindicated',                   order:0.16 },
+      { year:1991, label:'Soviet Union dissolves \u2014 unipolar moment; Cold War consensus ends',                                order:0.14 },
+    ]
+  },
+
+  modern: {
+    name: 'Modern America 1991\u20132026',
+    startYear: 1991, endYear: 2026,
+    omega: 0.20, gamma: 0.30,
+    p0: 0.24, v0: 0.0,
+    lc: 0.10, lo: 0.10,
+    mc0: 0.22, mo0: 0.06,
+    forceMult: 0.048,
+    events: [
+      { year:1991, label:'Soviet collapse \u2014 Cold War fear fades, globalisation consensus begins',   chaos:0.18 },
+      { year:1994, label:'NAFTA + crime wave \u2014 economic anxiety, chaos fear rising',               chaos:0.14 },
+      { year:2001, label:'9/11 \u2014 direct homeland attack, massive chaos fear, security state born', chaos:0.65 },
+      { year:2002, label:'Homeland Security, Patriot Act \u2014 surveillance state expands',            chaos:0.18 },
+      { year:2003, label:'Iraq War + WMD lies \u2014 chaos fear sustained',                             chaos:0.14 },
+      { year:2004, label:'Abu Ghraib, no WMDs \u2014 institutional betrayal, order memory rising',      order:0.18 },
+      { year:2005, label:'Hurricane Katrina \u2014 government failure, order memory spike',             order:0.22 },
+      { year:2007, label:'Subprime warning signs \u2014 financial system fracturing',                   order:0.14 },
+      { year:2008, label:'Financial crisis \u2014 American Dream betrayal, deep order memory spike',    order:0.52 },
+      { year:2009, label:'Tea Party movement \u2014 chaos fear of government overreach recharged',      chaos:0.14 },
+      { year:2010, label:'Citizens United \u2014 oligarchy legally entrenched, chaos recharge',        chaos:0.14 },
+      { year:2011, label:'Debt ceiling crisis + Occupy \u2014 institutional dysfunction visible',       chaos:0.14 },
+      { year:2012, label:'Sandy Hook + fiscal cliff \u2014 polarisation accelerates',                   chaos:0.12 },
+      { year:2013, label:'Snowden revelations \u2014 surveillance state exposed, order memory',         order:0.10 },
+      { year:2014, label:'Ferguson + ISIS + opioid epidemic \u2014 chaos fear recharges',               chaos:0.14, order:0.08 },
+      { year:2015, label:'Mass shootings + BLM + culture war \u2014 social fragmentation peaks',        chaos:0.16 },
+      { year:2016, label:'Trump election \u2014 populist rupture, chaos narrative dominant',             chaos:0.40 },
+      { year:2017, label:'Deepening polarisation \u2014 institutional norms eroding',                   chaos:0.16 },
+      { year:2018, label:'Midterm chaos, caravan panic, partisan media peak',                            chaos:0.18 },
+      { year:2019, label:'First impeachment, partisan breakdown complete',                               chaos:0.18 },
+      { year:2020, label:'COVID-19 + BLM \u2014 dual chaos spikes, emergency powers invoked',           chaos:0.42, order:0.12 },
+      { year:2021, label:'January 6th \u2014 democratic legitimacy crisis, mandate backlash',           order:0.08 },
+      { year:2022, label:'Dobbs decision \u2014 institutional rupture on rights',                       chaos:0.14 },
+      { year:2023, label:'AI disruption + debt ceiling + dysfunction \u2014 instability deepens',       chaos:0.12 },
+      { year:2024, label:'Trump re-election \u2014 executive consolidation mandate',                    chaos:0.20 },
+      { year:2025, label:'DOGE + court pressure + press freedom erosion \u2014 Monarchy zone',          chaos:0.22 },
+    ]
+  },
+
+  predict: {
+    name: '\u2691 Prediction from March 2026',
+    startYear: 1991, endYear: 2100,
+    omega: 0.20, gamma: 0.30,
+    p0: 0.24, v0: 0.0,
+    lc: 0.10, lo: 0.10,
+    mc0: 0.22, mo0: 0.06,
+    forceMult: 0.048,
+    _gammaAt2026: 0.08,
+    prediction: `
+      <div style="font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.2em;color:rgba(160,120,220,0.6);text-transform:uppercase;margin-bottom:12px;">
+        History runs 1991\u20132025. Projection begins at 2026 with damping reduced to \u03b3\u00a0=\u00a00.08.
+      </div>
+      <strong style="color:rgba(160,120,220,0.9);">Starting position (March 2026):</strong>
+      The model runs the full 1991\u20132025 event history to derive a starting position: <span style="color:#3a60b8;font-weight:600;">Oligarchy</span>. The <em>form</em> of democracy persists \u2014 elections, courts, legislature \u2014 but the <em>function</em> of power is oligarchic: both parties funded by the same donor class, media consolidated, wealth concentration at Gilded Age levels. The model tracks function, not form. <em>This is the baseline. You can change it \u2014 see below.</em><br><br>
+      <strong style="color:rgba(160,120,220,0.9);">Near-term (2026\u20132050):</strong>
+      With institutional damping at \u03b3\u00a0=\u00a00.08 \u2014 less than a quarter of a healthy republic \u2014 and rightward momentum from 2024\u201325, the model projects continued drift toward <span style="color:#7a40b8;font-weight:600;">Monarchy</span>. Not a crown. A dominant executive class ruling through legal apparatus while democratic forms are preserved as legitimating ritual.<br><br>
+      <strong style="color:rgba(160,120,220,0.9);">The single variable that decides everything:</strong>
+      Institutional damping (\u03b3). Restore courts, press, elections, civic norms above 0.20 and the swing slows. Leave them degraded and the pendulum goes where it is already going.
+    `
+  }
+};
+
+// ── SIMULATION STATE// ── SIMULATION STATE ──────────────────────────────────────────────────────────
+let scenario   = null;
+let simYear    = 0;
+let state      = { p:0, v:0, mc:0, mo:0, gamma:0.2 };
+let history    = [];   // { year, p, v, mc, mo, f, gamma, eventLabel }
+let running    = false;
+let rafId      = null;
+let lastFrame  = null;
+let simSpeed   = 0.5;  // years per second at normal setting — slow by default
+let evtType    = 'chaos';
+let injectedEvents = [];   // user-injected events
+
+// ── NESTED SCALE: LAGGED FIRST-ORDER TRACKING SYSTEM ────────────────────────
+// Each scale level tracks the macro pendulum with its own lag + time constant.
+// Faster levels (Individual) respond in months; slower ones (World) in centuries.
+// Coupling: each slower level is also pulled by the faster level below it —
+// individuals shift first, then families, communities, institutions, nations.
+const LEVELS = ['World','Civilization','Nation','Institution','Community','Family','Individual'];
+const LEVEL_CFG = [
+  { lag: 25, tau: 200, label: 'centuries'   },  // World
+  { lag: 20, tau: 100, label: 'generations' },  // Civilization
+  { lag: 15, tau:  50, label: 'decades'     },  // Nation
+  { lag: 10, tau:  25, label: 'years'       },  // Institution
+  { lag:  5, tau:  12, label: 'months'      },  // Community
+  { lag:  2, tau:   5, label: 'weeks'       },  // Family
+  { lag:  0, tau: 1.5, label: 'days'        },  // Individual
+];
+const K_DRIVE = 0.06;  // how strongly each level is pulled by the faster level below
+
+let nestedState = LEVEL_CFG.map(() => ({ p: 0 }));
+
+function getMacroPAtYear(targetYear) {
+  if (history.length === 0) return state.p;
+  if (targetYear <= history[0].year) return history[0].p;
+  let closest = history[0];
+  for (let i = history.length - 1; i >= 0; i--) {
+    if (history[i].year <= targetYear) { closest = history[i]; break; }
+  }
+  return closest.p;
+}
+
+function updateNested() {
+  if (!scenario || nestedState.length === 0) return;
+  const snapshot = nestedState.map(s => s.p);
+  const N = LEVEL_CFG.length;
+
+  // Update all levels simultaneously using snapshot (true parallel update)
+  // Cascade from fast→slow emerges over many DT steps, not within one step
+  for (let n = N - 1; n >= 0; n--) {
+    const cfg = LEVEL_CFG[n];
+    const laggedYear = Math.max(scenario.startYear, simYear - cfg.lag);
+    const target = getMacroPAtYear(laggedYear);
+    // Pull from faster level (snapshot, not live) so no within-step cascade
+    const fasterP = (n < N - 1) ? snapshot[n + 1] : target;
+    const dp = ((target - snapshot[n]) / cfg.tau + K_DRIVE * (fasterP - snapshot[n])) * DT;
+    nestedState[n] = { p: Math.max(-0.98, Math.min(0.98, snapshot[n] + dp)) };
+  }
+}
+
+function updateNoise() { updateNested(); }
+
+// ── INIT / LOAD SCENARIO ──────────────────────────────────────────────────────
+function loadScenario(key, triggerEl) {
+  scenario       = SCENARIOS[key];
+  injectedEvents = [];
+  running        = false;
+  cancelAnimationFrame(rafId);
+  document.getElementById('btnRun').textContent = '▶ Play';
+  document.getElementById('btnRun').classList.remove('active');
+
+  // Button highlight
+  document.querySelectorAll('#scenarioBtns .preset-btn').forEach(b => b.classList.remove('active'));
+  const activeBtn = triggerEl || document.querySelector('#scenarioBtns [data-key="' + key + '"]');
+  if (activeBtn) activeBtn.classList.add('active');
+
+  // If this is the prediction scenario: pre-run 1991–2025 silently, start display at 2026
+  if (key === 'predict') {
+    scenario = { ...SCENARIOS.predict, events: [...SCENARIOS.modern.events] };
+    simYear      = scenario.startYear;  // 1991
+    state        = { p: scenario.p0, v: scenario.v0, mc: scenario.mc0, mo: scenario.mo0, gamma: scenario.gamma };
+    activeSpikes = [];
+    lastEventLabel = '';
+    // Pre-run silently: same logic as doStep but without recording history
+    const preEvts = [...scenario.events];
+    while (simYear < 2026 - DT/2) {
+      preEvts.forEach(ev => {
+        if (Math.abs(ev.year - simYear) < DT/2) {
+          if ((ev.chaos||0) > 0) activeSpikes.push({ type:'chaos', mag:ev.chaos, decay:scenario.lc, startYear:simYear });
+          if ((ev.order||0) > 0) activeSpikes.push({ type:'order', mag:ev.order, decay:scenario.lo, startYear:simYear });
+          if (ev.posReset !== undefined) {
+            state.p = ev.posReset; state.v = ev.velReset || 0;
+            activeSpikes = [];
+            if (ev.mcReset !== undefined) state.mc = ev.mcReset;
+            if (ev.moReset !== undefined) state.mo = ev.moReset;
+          }
+        }
+      });
+      state.mc *= Math.exp(-scenario.lc * DT);
+      state.mo *= Math.exp(-scenario.lo * DT);
+      const fm = scenario.forceMult || 0.05;
+      let tmc = state.mc, tmo = state.mo;
+      activeSpikes.forEach(sp => {
+        const age = Math.max(0, simYear - sp.startYear);
+        const c = sp.mag * Math.exp(-sp.decay * age);
+        if (sp.type === 'chaos') tmc += c; else tmo += c;
+      });
+      const f   = (Math.max(0,tmc) - Math.max(0,tmo)) * fm;
+      const acc = -scenario.omega * scenario.omega * Math.sin(Math.PI * state.p) - state.gamma * state.v + f;
+      state.v += acc * DT;
+      state.p  = Math.max(-0.95, Math.min(0.95, state.p + state.v * DT));
+      simYear += DT;
+    }
+    // Arrived at 2026 — drop damping, clear old spikes, start recording
+    state.gamma  = scenario._gammaAt2026 || 0.08;
+    simYear      = 2026;
+    activeSpikes = [];
+    history      = [];
+    recordState('March 2026 — derived from 1991–2025 event history');
+    // Seed nested state at the derived 2026 macro position
+    nestedState = LEVEL_CFG.map(() => ({ p: state.p }));
+  } else {
+    // Reset state normally
+    simYear = scenario.startYear;
+    state   = { p: scenario.p0, v: scenario.v0, mc: scenario.mc0, mo: scenario.mo0, gamma: scenario.gamma };
+    activeSpikes = [];
+    history = [];
+    recordState('');
+  }
+  // Initialize nested oscillators at the actual simulation start position
+  // (for predict this is the 2026-derived state, for others it's p0)
+  const nestedStartP = state.p;
+  nestedState = LEVEL_CFG.map(() => ({ p: nestedStartP }));
+
+  // Prediction panel
+  const panel = document.getElementById('predPanel');
+  if (scenario.prediction) {
+    document.getElementById('predText').innerHTML = scenario.prediction;
+    panel.style.display = 'block';
+  } else {
+    panel.style.display = 'none';
+  }
+
+  drawAll();
+  updateReadout('');
+}
+
+// ── MEMORY FIELD ──────────────────────────────────────────────────────────────
+// All active spikes are stored as { mc, mo, lc, lo, startYear }
+// At each year t, the contribution is mc*exp(-lc*(t-startYear)) etc.
+let activeSpikes = [];
+
+function fireEvent(year, chaos, order) {
+  if (chaos > 0) activeSpikes.push({ type:'chaos', mag:chaos, decay:scenario.lc, startYear:year });
+  if (order > 0) activeSpikes.push({ type:'order', mag:order, decay:scenario.lo, startYear:year });
+}
+
+function getFieldAt(year) {
+  let mc = state.mc;  // baseline (decays from initial)
+  let mo = state.mo;
+  // Apply spike contributions
+  activeSpikes.forEach(sp => {
+    const age = Math.max(0, year - sp.startYear);
+    const contrib = sp.mag * Math.exp(-sp.decay * age);
+    if (sp.type === 'chaos') mc += contrib;
+    else                     mo += contrib;
+  });
+  return { mc: Math.max(0,mc), mo: Math.max(0,mo), f: Math.max(0,mc) - Math.max(0,mo) };
+}
+
+// ── RK4 ───────────────────────────────────────────────────────────────────────
+function derivatives(year, p, v) {
+  const { f } = getFieldAt(year);
+  const fm  = (scenario && scenario.forceMult) ? scenario.forceMult : 0.05;
+  const acc = -scenario.omega * scenario.omega * Math.sin(Math.PI * p)
+              - state.gamma * v
+              + f * fm;
+  return { dp: v, dv: acc };
+}
+
+function rk4Step(year, p, v, dt) {
+  const k1 = derivatives(year,        p,             v);
+  const k2 = derivatives(year+dt/2,   p+k1.dp*dt/2,  v+k1.dv*dt/2);
+  const k3 = derivatives(year+dt/2,   p+k2.dp*dt/2,  v+k2.dv*dt/2);
+  const k4 = derivatives(year+dt,     p+k3.dp*dt,    v+k3.dv*dt);
+  return {
+    p: p + (dt/6)*(k1.dp+2*k2.dp+2*k3.dp+k4.dp),
+    v: v + (dt/6)*(k1.dv+2*k2.dv+2*k3.dv+k4.dv),
+  };
+}
+
+// ── STEP ──────────────────────────────────────────────────────────────────────
+let lastEventLabel = '';
+
+function doStep() {
+  // Check for events this year (within DT window)
+  let evtLabel = '';
+  const allEvents = [...(scenario.events||[]), ...injectedEvents];
+  allEvents.forEach(ev => {
+    if (Math.abs(ev.year - simYear) < DT/2) {
+      if ((ev.chaos||0) > 0) fireEvent(ev.year, ev.chaos, 0);
+      if ((ev.order||0) > 0) fireEvent(ev.year, 0, ev.order);
+      if (ev.posReset !== undefined) {
+        state.p = ev.posReset;
+        state.v = ev.velReset || 0;
+        activeSpikes = [];
+        if (ev.mcReset !== undefined) state.mc = ev.mcReset;
+        if (ev.moReset !== undefined) state.mo = ev.moReset;
+      }
+      evtLabel = ev.label || '';
+      if (ev.gamma !== undefined) state.gamma = ev.gamma;
+    }
+  });
+  // Prediction scenario: drop damping at 2026
+  if (scenario._gammaAt2026 && Math.abs(simYear - 2026) < DT/2) {
+    state.gamma = scenario._gammaAt2026;
+  }
+
+  if (evtLabel) lastEventLabel = evtLabel;
+
+  // Decay baseline charges
+  state.mc *= Math.exp(-scenario.lc * DT);
+  state.mo *= Math.exp(-scenario.lo * DT);
+
+  const next = rk4Step(simYear, state.p, state.v, DT);
+  state.p = Math.max(-1, Math.min(1, next.p));
+  state.v = next.v;
+  if (Math.abs(state.p) >= 1) state.v *= -0.25;
+  simYear += DT;
+
+  if (simYear >= scenario.endYear) {
+    running = false;
+    cancelAnimationFrame(rafId);
+    document.getElementById('btnRun').textContent = '▶ Play';
+  }
+
+  recordState(evtLabel || lastEventLabel);
+  updateNested();
+}
+
+function recordState(evtLabel) {
+  const { mc, mo, f } = getFieldAt(simYear);
+  history.push({ year:simYear, p:state.p, v:state.v, mc, mo, f, gamma:state.gamma, evtLabel });
+  if (history.length > MAX_HISTORY) history.shift();
+}
+
+// ── PLAYBACK LOOP ─────────────────────────────────────────────────────────────
+let stepAccum = 0;  // fractional step accumulator for slow speeds
+
+function loop(ts) {
+  if (!running) return;
+  if (!lastFrame) lastFrame = ts;
+  const elapsed = Math.min((ts - lastFrame) / 1000, 0.1);  // cap at 100ms to avoid jumps
+  lastFrame = ts;
+
+  // Accumulate fractional steps — allows speeds well below 1 step/frame
+  stepAccum += (elapsed * simSpeed) / DT;
+  const steps = Math.floor(stepAccum);
+  stepAccum -= steps;
+  const capped = Math.min(steps, 20);  // hard cap: never jump more than 20 steps
+  for (let i = 0; i < capped && running; i++) doStep();
+
+  drawAll();
+  updateReadout(lastEventLabel);
+  rafId = requestAnimationFrame(loop);
+}
+
+function toggleRun() {
+  if (!scenario) { loadScenario('french', null); return; }
+  if (simYear >= scenario.endYear) resetToStart();
+  running = !running;
+  document.getElementById('btnRun').textContent = running ? '⏸ Pause' : '▶ Play';
+  document.getElementById('btnRun').classList.toggle('active', running);
+  if (running) { lastFrame = null; rafId = requestAnimationFrame(loop); }
+  else cancelAnimationFrame(rafId);
+}
+
+function stopSim() {
+  running = false;
+  cancelAnimationFrame(rafId);
+  document.getElementById('btnRun').textContent = '▶ Play';
+  document.getElementById('btnRun').classList.remove('active');
+  if (scenario) resetToStart();
+}
+
+function resetToStart() {
+  activeSpikes   = [];
+  lastEventLabel = '';
+  injectedEvents = [];
+  // For predict: re-run the pre-simulation
+  if (scenario && scenario.name && scenario.name.includes('2026')) {
+    loadScenario('predict', document.querySelector('[data-key="predict"]'));
+    return;
+  }
+  simYear = scenario.startYear;
+  state   = { p:scenario.p0, v:scenario.v0, mc:scenario.mc0, mo:scenario.mo0, gamma:scenario.gamma };
+  history = [];
+  recordState('');
+  drawAll();
+  updateReadout('');
+}
+
+function stepYear() {
+  if (!scenario) return;
+  const stepsPerYear = Math.round(1 / DT);
+  for (let i = 0; i < stepsPerYear; i++) doStep();
+  drawAll();
+  updateReadout(lastEventLabel);
+}
+
+// ── READOUT ───────────────────────────────────────────────────────────────────
+function updateReadout(evtLabel) {
+  if (!history.length) return;
+  const h   = history[history.length-1];
+  const arc = archetype(h.p);
+  document.getElementById('yearDisp').textContent  = Math.floor(simYear);
+  document.getElementById('eventDisp').textContent = evtLabel || '—';
+  document.getElementById('rd_a').textContent      = arc.name;
+  document.getElementById('rd_a').style.color      = arc.color;
+  document.getElementById('rd_p').textContent      = h.p.toFixed(3);
+  document.getElementById('rd_v').textContent      = h.v.toFixed(3);
+  document.getElementById('rd_mc').textContent     = h.mc.toFixed(3);
+  document.getElementById('rd_mo').textContent     = h.mo.toFixed(3);
+  document.getElementById('rd_f').textContent      = h.f.toFixed(3);
+  document.getElementById('rd_g').textContent      = h.gamma.toFixed(3);
+}
+
+// ── DRAW: MAIN PHASE PORTRAIT ─────────────────────────────────────────────────
+function hexToRgb(hex) {
+  return { r:parseInt(hex.slice(1,3),16), g:parseInt(hex.slice(3,5),16), b:parseInt(hex.slice(5,7),16) };
+}
+
+function pToX(p, W) { return (p+1)/2 * W; }
+
+function drawMain() {
+  const canvas = document.getElementById('simCanvas');
+  const W = canvas.parentElement.clientWidth;
+  canvas.width = W; canvas.height = 300;
+  const H = 300;
+  const ctx = canvas.getContext('2d');
+
+  ctx.fillStyle = '#070504'; ctx.fillRect(0,0,W,H);
+
+  // Zone backgrounds
+  const zones = [
+    {min:-1,max:-0.67,color:'rgba(201,64,64,0.06)'},{min:-0.67,max:-0.33,color:'rgba(192,106,32,0.05)'},
+    {min:-0.33,max:-0.05,color:'rgba(48,144,112,0.05)'},{min:-0.05,max:0.05,color:'rgba(201,168,76,0.07)'},
+    {min:0.05,max:0.33,color:'rgba(58,96,184,0.05)'},{min:0.33,max:0.67,color:'rgba(122,64,184,0.05)'},
+    {min:0.67,max:1.0,color:'rgba(138,24,24,0.08)'},
+  ];
+  zones.forEach(z => {
+    ctx.fillStyle = z.color;
+    ctx.fillRect(pToX(z.min,W),0,pToX(z.max,W)-pToX(z.min,W),H);
+  });
+
+  // Zone labels
+  const labels = [
+    {p:-0.84,name:'ANARCHY',c:'rgba(201,64,64,0.4)'},{p:-0.50,name:'TRIBALISM',c:'rgba(192,106,32,0.4)'},
+    {p:-0.19,name:'DEMOCRACY',c:'rgba(48,144,112,0.4)'},{p:0.00,name:'REPUBLIC',c:'rgba(201,168,76,0.5)'},
+    {p:0.19,name:'OLIGARCHY',c:'rgba(58,96,184,0.4)'},{p:0.50,name:'MONARCHY',c:'rgba(122,64,184,0.4)'},
+    {p:0.84,name:'TYRANNY',c:'rgba(138,24,24,0.5)'},
+  ];
+  ctx.font = `${Math.max(8,Math.round(W/90))}px Cinzel, serif`;
+  ctx.textAlign = 'center';
+  labels.forEach(l => { ctx.fillStyle=l.c; ctx.fillText(l.name, pToX(l.p,W), 16); });
+
+  // Center line
+  ctx.strokeStyle='rgba(201,168,76,0.1)'; ctx.lineWidth=1; ctx.setLineDash([4,6]);
+  ctx.beginPath(); ctx.moveTo(pToX(0,W),0); ctx.lineTo(pToX(0,W),H); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Y-axis label
+  ctx.save(); ctx.translate(12, H/2); ctx.rotate(-Math.PI/2);
+  ctx.fillStyle='rgba(201,168,76,0.25)'; ctx.font='9px JetBrains Mono, monospace';
+  ctx.textAlign='center'; ctx.fillText("velocity P'(t)", 0, 0); ctx.restore();
+
+  // Draw trajectory
+  if (history.length > 1) {
+    for (let i=1; i<history.length; i++) {
+      const prev=history[i-1], curr=history[i];
+      const x1=pToX(prev.p,W), y1=H/2-prev.v*(H*0.18);
+      const x2=pToX(curr.p,W), y2=H/2-curr.v*(H*0.18);
+      const alpha = 0.1 + 0.7*(i/history.length);
+      const arc   = archetype(curr.p);
+      const c     = hexToRgb(arc.color);
+      ctx.strokeStyle=`rgba(${c.r},${c.g},${c.b},${alpha})`;
+      ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+    }
+  }
+
+  // Event marker lines (vertical)
+  if (scenario) {
+    const allEvents=[...(scenario.events||[]),...injectedEvents];
+    const yr0=scenario.startYear, yr1=scenario.endYear;
+    allEvents.forEach(ev => {
+      const prog=(ev.year-yr0)/(yr1-yr0);
+      if (prog<0||prog>1) return;
+      // small tick at bottom showing year
+      const px = prog*W;
+      ctx.strokeStyle=ev.chaos>0?'rgba(201,64,64,0.25)':'rgba(112,64,201,0.25)';
+      ctx.lineWidth=1; ctx.setLineDash([2,4]);
+      ctx.beginPath(); ctx.moveTo(px,H-18); ctx.lineTo(px,H-6); ctx.stroke();
+      ctx.setLineDash([]);
+    });
+  }
+
+  // Current bob
+  if (history.length > 0) {
+    const h   = history[history.length-1];
+    const x   = pToX(h.p,W);
+    const y   = H/2-h.v*(H*0.18);
+    const arc = archetype(h.p);
+    const c   = hexToRgb(arc.color);
+    const grd = ctx.createRadialGradient(x,y,0,x,y,20);
+    grd.addColorStop(0,`rgba(${c.r},${c.g},${c.b},0.45)`);
+    grd.addColorStop(1,`rgba(${c.r},${c.g},${c.b},0)`);
+    ctx.fillStyle=grd; ctx.beginPath(); ctx.arc(x,y,20,0,Math.PI*2); ctx.fill();
+    ctx.save(); ctx.shadowColor=`rgba(${c.r},${c.g},${c.b},0.9)`; ctx.shadowBlur=16;
+    ctx.fillStyle=`rgb(${c.r},${c.g},${c.b})`;
+    ctx.beginPath(); ctx.arc(x,y,8,0,Math.PI*2); ctx.fill(); ctx.restore();
+  }
+
+  // Axis labels
+  ctx.fillStyle='rgba(201,64,64,0.35)'; ctx.font='9px JetBrains Mono, monospace';
+  ctx.textAlign='left'; ctx.fillText('← CHAOS', 18, H-6);
+  ctx.fillStyle='rgba(122,64,184,0.35)'; ctx.textAlign='right'; ctx.fillText('ORDER →', W-6, H-6);
+  ctx.fillStyle='rgba(201,168,76,0.2)'; ctx.textAlign='center';
+  ctx.fillText('Phase Portrait  (x = position P,  y = velocity)', W/2, H-6);
+}
+
+// ── DRAW: MEMORY FIELD ────────────────────────────────────────────────────────
+function drawMemory() {
+  const canvas=document.getElementById('memCanvas');
+  const W=canvas.parentElement.clientWidth; canvas.width=W; canvas.height=180;
+  const H=180; const ctx=canvas.getContext('2d');
+  ctx.fillStyle='#070504'; ctx.fillRect(0,0,W,H);
+  if (history.length<2) return;
+
+  const PAD_L=44, PAD_B=28, PAD_T=16, PAD_R=12;
+  const gW=W-PAD_L-PAD_R, gH=H-PAD_B-PAD_T;
+
+  const maxVal=Math.max(0.1,...history.map(h=>Math.max(h.mc,h.mo)));
+  const toGX=i=>(i/(history.length-1))*gW+PAD_L;
+  const toGY=v=>PAD_T+gH-(v/maxVal)*gH;
+
+  // Y gridlines
+  [0,0.5,1].forEach(frac => {
+    const y=PAD_T+gH-frac*gH;
+    ctx.strokeStyle='rgba(201,168,76,0.05)'; ctx.lineWidth=1; ctx.setLineDash([2,4]);
+    ctx.beginPath(); ctx.moveTo(PAD_L,y); ctx.lineTo(W-PAD_R,y); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='rgba(201,168,76,0.25)'; ctx.font='8px JetBrains Mono, monospace';
+    ctx.textAlign='right'; ctx.fillText((frac*maxVal).toFixed(2), PAD_L-4, y+3);
+  });
+
+  // Chaos line
+  ctx.beginPath();
+  history.forEach((h,i)=>{ const x=toGX(i),y=toGY(h.mc); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+  ctx.strokeStyle='rgba(201,64,64,0.8)'; ctx.lineWidth=1.5; ctx.stroke();
+
+  // Order line
+  ctx.beginPath();
+  history.forEach((h,i)=>{ const x=toGX(i),y=toGY(h.mo); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+  ctx.strokeStyle='rgba(112,64,201,0.8)'; ctx.lineWidth=1.5; ctx.stroke();
+
+  // Net force dashed
+  ctx.beginPath();
+  history.forEach((h,i)=>{ const x=toGX(i),y=toGY(Math.abs(h.f)); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+  ctx.strokeStyle='rgba(201,168,76,0.4)'; ctx.lineWidth=1; ctx.setLineDash([3,4]); ctx.stroke(); ctx.setLineDash([]);
+
+  // Event tick marks on x-axis
+  if (scenario) {
+    const yr0=scenario.startYear, yr1=scenario.endYear;
+    const allEvents=[...(scenario.events||[]),...injectedEvents];
+    allEvents.forEach(ev => {
+      const prog=Math.max(0,Math.min(1,(ev.year-yr0)/(yr1-yr0)));
+      const x=PAD_L+prog*gW;
+      ctx.strokeStyle=ev.chaos>0?'rgba(201,64,64,0.4)':'rgba(112,64,201,0.4)';
+      ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(x,H-PAD_B); ctx.lineTo(x,H-PAD_B+5); ctx.stroke();
+    });
+  }
+
+  // X axis year labels
+  if (scenario) {
+    const yr0=scenario.startYear, yr1=scenario.endYear;
+    const span=yr1-yr0;
+    const step=span>60?20:span>30?10:5;
+    ctx.fillStyle='rgba(201,168,76,0.25)'; ctx.font='8px JetBrains Mono, monospace'; ctx.textAlign='center';
+    for (let yr=Math.ceil(yr0/step)*step; yr<=yr1; yr+=step) {
+      const x=PAD_L+((yr-yr0)/(yr1-yr0))*gW;
+      ctx.fillText(yr, x, H-4);
+    }
+  }
+
+  // Axes
+  ctx.strokeStyle='rgba(201,168,76,0.15)'; ctx.lineWidth=1;
+  ctx.beginPath();
+  ctx.moveTo(PAD_L,PAD_T); ctx.lineTo(PAD_L,H-PAD_B); ctx.lineTo(W-PAD_R,H-PAD_B);
+  ctx.stroke();
+
+  // Y axis label
+  ctx.save(); ctx.translate(10,H/2); ctx.rotate(-Math.PI/2);
+  ctx.fillStyle='rgba(201,168,76,0.3)'; ctx.font='9px JetBrains Mono, monospace';
+  ctx.textAlign='center'; ctx.fillText('Memory Charge', 0, 0); ctx.restore();
+
+  // X axis label
+  ctx.fillStyle='rgba(201,168,76,0.25)'; ctx.font='8px JetBrains Mono, monospace';
+  ctx.textAlign='center'; ctx.fillText('Year', W/2, H-4);
+
+  // Legend
+  ctx.font='9px JetBrains Mono, monospace'; ctx.textAlign='left';
+  ctx.fillStyle='rgba(201,64,64,0.75)';  ctx.fillText('━ M_c  Chaos', PAD_L+4, PAD_T+12);
+  ctx.fillStyle='rgba(112,64,201,0.75)'; ctx.fillText('━ M_o  Order', PAD_L+4, PAD_T+24);
+  ctx.fillStyle='rgba(201,168,76,0.5)';  ctx.fillText('╌ |F|  Net force', PAD_L+4, PAD_T+36);
+}
+
+// ── DRAW: NESTED SCALES ───────────────────────────────────────────────────────
+function drawNested() {
+  const canvas=document.getElementById('nestedCanvas');
+  const W=canvas.parentElement.clientWidth; canvas.width=W;
+  const HEADER_H=36, ROW_H=32, H=HEADER_H+ROW_H*7;
+  canvas.height=H;
+  const ctx=canvas.getContext('2d');
+  const LABEL_W=110, PAD_R=12;
+  const trackX=LABEL_W, trackW=W-LABEL_W-PAD_R;
+
+  ctx.fillStyle='#070504'; ctx.fillRect(0,0,W,H);
+
+  // Spectrum zones header
+  const specZones=[
+    {min:-1,max:-0.67,label:'ANARCHY',   short:'ANA',  color:'rgba(201,64,64,0.6)'  },
+    {min:-0.67,max:-0.33,label:'TRIBALISM', short:'TRIBE',color:'rgba(192,106,32,0.55)'},
+    {min:-0.33,max:-0.05,label:'DEMOCRACY', short:'DEMO', color:'rgba(48,144,112,0.55)'},
+    {min:-0.05,max: 0.05,label:'REPUBLIC',  short:'REP',  color:'rgba(201,168,76,0.7)' },
+    {min: 0.05,max: 0.33,label:'OLIGARCHY', short:'OLIG', color:'rgba(58,96,184,0.55)' },
+    {min: 0.33,max: 0.67,label:'MONARCHY',  short:'MON',  color:'rgba(122,64,184,0.55)'},
+    {min: 0.67,max: 1.0, label:'TYRANNY',   short:'TYR',  color:'rgba(180,30,30,0.65)' },
+  ];
+  specZones.forEach(z => {
+    const x1=trackX+(z.min+1)/2*trackW, x2=trackX+(z.max+1)/2*trackW;
+    const zW=x2-x1;
+    ctx.fillStyle=z.color.replace(/[\d.]+\)$/,'0.04)');
+    ctx.fillRect(x1,0,zW,H);
+    ctx.save();
+    ctx.beginPath(); ctx.rect(x1+1,2,zW-2,HEADER_H-4); ctx.clip();
+    ctx.fillStyle=z.color; ctx.textAlign='center';
+    const mid=(x1+x2)/2;
+    // Use full label if wide enough, short otherwise
+    const lbl = zW > 55 ? z.label : (zW > 28 ? z.short : '');
+    ctx.font=`${Math.min(9,Math.max(7,Math.floor(zW/lbl.length*1.2)))}px Cinzel,serif`;
+    ctx.fillText(lbl, mid, HEADER_H-10);
+    ctx.restore();
+    ctx.strokeStyle='rgba(201,168,76,0.07)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(x1,HEADER_H); ctx.lineTo(x1,H); ctx.stroke();
+  });
+  ctx.strokeStyle='rgba(201,168,76,0.18)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(0,HEADER_H); ctx.lineTo(W,HEADER_H); ctx.stroke();
+
+  // Chaos / Order end labels
+  ctx.font='8px JetBrains Mono,monospace';
+  ctx.fillStyle='rgba(201,64,64,0.4)'; ctx.textAlign='left';
+  ctx.fillText('← CHAOS', trackX+3, HEADER_H-10);
+  ctx.fillStyle='rgba(122,64,184,0.4)'; ctx.textAlign='right';
+  ctx.fillText('ORDER →', trackX+trackW-3, HEADER_H-10);
+
+  // timescales now in LEVEL_CFG[n].label
+
+  LEVELS.forEach((levelName,n) => {
+    const y0=HEADER_H+n*ROW_H, cy=y0+ROW_H/2;
+    ctx.fillStyle=n%2===0?'rgba(201,168,76,0.012)':'transparent';
+    ctx.fillRect(0,y0,W,ROW_H);
+    ctx.strokeStyle='rgba(201,168,76,0.05)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(0,y0+ROW_H); ctx.lineTo(W,y0+ROW_H); ctx.stroke();
+
+    // Level label — clipped
+    ctx.save();
+    ctx.beginPath(); ctx.rect(4,y0+2,LABEL_W-8,ROW_H-4); ctx.clip();
+    ctx.fillStyle='rgba(201,168,76,0.8)'; ctx.font='9px Cinzel,serif';
+    ctx.textAlign='left'; ctx.fillText(levelName, 6, cy-1);
+    ctx.fillStyle='rgba(201,168,76,0.3)'; ctx.font='8px EB Garamond,serif';
+    ctx.fillText(LEVEL_CFG[n].label, 6, cy+10);
+    ctx.restore();
+
+    // Track
+    ctx.strokeStyle='rgba(201,168,76,0.07)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(trackX,cy); ctx.lineTo(trackX+trackW,cy); ctx.stroke();
+    const midX=trackX+trackW/2;
+    ctx.strokeStyle='rgba(201,168,76,0.18)';
+    ctx.beginPath(); ctx.moveTo(midX,cy-4); ctx.lineTo(midX,cy+4); ctx.stroke();
+
+    // Bob — position from lagged tracking system
+    if (!nestedState || !nestedState[n]) return;
+    const p = nestedState[n].p;
+    const bx  = trackX + (p+1)/2 * trackW;
+    const arc = archetype(p);
+    const c   = hexToRgb(arc.color);
+    const sz  = 4 + (6-n) * 0.8;  // World biggest, Individual smallest
+
+    // Dashed line showing gap to current macro position
+    if (history.length > 0) {
+      const macroP  = history[history.length-1].p;
+      const macroBx = trackX + (macroP+1)/2 * trackW;
+      const gap = Math.abs(bx - macroBx);
+      if (gap > 6) {
+        ctx.strokeStyle = `rgba(${c.r},${c.g},${c.b},${Math.min(0.20, gap/trackW)})`;
+        ctx.lineWidth   = 1;
+        ctx.setLineDash([2, 5]);
+        ctx.beginPath(); ctx.moveTo(bx, cy); ctx.lineTo(macroBx, cy); ctx.stroke();
+        ctx.setLineDash([]);
+      }
+    }
+
+    // Arrow showing pull toward faster level below (n+1 = faster)
+    if (n < LEVEL_CFG.length - 1 && nestedState[n+1]) {
+      const fasterP  = nestedState[n+1].p;
+      const fasterBx = trackX + (fasterP+1)/2 * trackW;
+      const tension  = fasterBx - bx;
+      if (Math.abs(tension) > 8) {
+        const dir = tension > 0 ? 1 : -1;
+        const alpha = Math.min(0.30, Math.abs(tension) / trackW * 3);
+        ctx.strokeStyle = `rgba(201,168,76,${alpha})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(bx + dir * (sz + 2), cy);
+        ctx.lineTo(bx + dir * (sz + 10), cy);
+        // arrowhead
+        ctx.moveTo(bx + dir*(sz+10), cy);
+        ctx.lineTo(bx + dir*(sz+6), cy - 3);
+        ctx.moveTo(bx + dir*(sz+10), cy);
+        ctx.lineTo(bx + dir*(sz+6), cy + 3);
+        ctx.stroke();
+      }
+    }
+
+    // Glow
+    const grd = ctx.createRadialGradient(bx, cy, 0, bx, cy, sz*2.5);
+    grd.addColorStop(0, `rgba(${c.r},${c.g},${c.b},0.35)`);
+    grd.addColorStop(1, `rgba(${c.r},${c.g},${c.b},0)`);
+    ctx.fillStyle = grd;
+    ctx.beginPath(); ctx.arc(bx, cy, sz*2.5, 0, Math.PI*2); ctx.fill();
+
+    // Bob
+    ctx.save();
+    ctx.shadowColor = `rgba(${c.r},${c.g},${c.b},0.9)`;
+    ctx.shadowBlur  = 12;
+    ctx.fillStyle   = `rgba(${c.r},${c.g},${c.b},0.90)`;
+    ctx.beginPath(); ctx.arc(bx, cy, sz, 0, Math.PI*2); ctx.fill();
+    ctx.restore();
+
+    // Archetype label inside the bob if wide enough
+    const arcLabel = arc.name.slice(0,3).toUpperCase();
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.font = '7px JetBrains Mono,monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(arcLabel, bx, cy + 3);
+  });
+}
+
+function drawAll() { drawMain(); drawMemory(); drawNested(); }
+
+// ── EVENT INJECTION ───────────────────────────────────────────────────────────
+function setEvtType(type) {
+  evtType=type;
+  document.getElementById('evtChaos').classList.toggle('active', type==='chaos');
+  document.getElementById('evtOrder').classList.toggle('active', type==='order');
+}
+document.getElementById('s_intensity').addEventListener('input', function() {
+  document.getElementById('v_intensity').textContent = parseFloat(this.value).toFixed(1);
+});
+
+function injectEvent() {
+  if (!scenario) return;
+  const intensity = parseFloat(document.getElementById('s_intensity').value);
+  const label     = document.getElementById('evtLabel').value.trim() || (evtType==='chaos'?'Custom chaos event':'Custom order event');
+  const ev = {
+    year:  simYear,
+    label: `★ ${label}`,
+    chaos: evtType==='chaos' ? intensity : 0,
+    order: evtType==='order' ? intensity : 0,
+  };
+  injectedEvents.push(ev);
+  fireEvent(ev.year, ev.chaos, ev.order);
+  lastEventLabel = ev.label;
+  document.getElementById('evtLabel').value='';
+  if (!running) { drawAll(); updateReadout(ev.label); }
+}
+
+// ── SPEED SLIDER ──────────────────────────────────────────────────────────────
+function sliderToSpeed(v) {
+  // 1→0.5 yr/s,  100→5 yr/s  (log scale)
+  return 0.5 * Math.pow(10, (v-1)/99);
+}
+document.getElementById('s_speed').addEventListener('input', function() {
+  simSpeed = sliderToSpeed(parseFloat(this.value));
+  const label = simSpeed<1?simSpeed.toFixed(2)+' yr/s':
+                simSpeed<10?simSpeed.toFixed(1)+' yr/s':
+                Math.round(simSpeed)+' yr/s';
+  document.getElementById('v_speed').textContent = label;
+});
+simSpeed = sliderToSpeed(1);   // start at 0.5 yr/s
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+window.addEventListener('resize', drawAll);
+loadScenario('french', null);
+
+    </script>
+  </div>
+
+
+  <div class="divider"><span>◎</span></div>
+
+  <div class="footer">
+    ✦ &nbsp; A Theory of Political Archetypes &nbsp; ✦
+    <div style="margin-top:0.8rem; font-family:'EB Garamond',serif; font-size:0.78rem; font-style:italic; color:rgba(201,168,76,0.3); letter-spacing:0.05em;">
+      © Kevin McElvain 2026. All rights reserved.
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
