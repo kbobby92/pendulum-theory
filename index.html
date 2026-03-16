@@ -291,18 +291,6 @@
           <stop offset="0%" stop-color="#c9a84c"/>
           <stop offset="100%" stop-color="#7a6230"/>
         </linearGradient>
-        <linearGradient id="pillarBlack" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#1a1510"/>
-          <stop offset="40%" stop-color="#3a3028"/>
-          <stop offset="60%" stop-color="#4a4038"/>
-          <stop offset="100%" stop-color="#1a1510"/>
-        </linearGradient>
-        <linearGradient id="pillarWhite" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#8a8070"/>
-          <stop offset="40%" stop-color="#d8cdb8"/>
-          <stop offset="60%" stop-color="#e8ddc8"/>
-          <stop offset="100%" stop-color="#8a8070"/>
-        </linearGradient>
         <linearGradient id="machGrad" x1="0%" y1="0%" x2="100%" y2="0%">
           <stop offset="0%"   stop-color="rgba(140,100,20,0.2)"/>
           <stop offset="25%"  stop-color="rgba(180,130,30,0.4)"/>
@@ -315,14 +303,6 @@
           <stop offset="50%"  stop-color="rgba(160,100,20,0.6)"/>
           <stop offset="100%" stop-color="rgba(80,50,10,0.3)"/>
         </linearGradient>
-        <radialGradient id="sacredBg" cx="50%" cy="38%" r="45%">
-          <stop offset="0%" stop-color="rgba(201,168,76,0.07)"/>
-          <stop offset="100%" stop-color="rgba(201,168,76,0)"/>
-        </radialGradient>
-        <filter id="eyeglow">
-          <feGaussianBlur stdDeviation="8" result="blur"/>
-          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
         <filter id="serpentglow">
           <feGaussianBlur stdDeviation="5" result="blur"/>
           <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
@@ -345,25 +325,7 @@
       </defs>
 
       <!-- Radial glow -->
-      <rect x="0" y="0" width="1000" height="860" fill="url(#sacredBg)"/>
-
-      <!-- ══ FLOWER OF LIFE — sacred geometry background ══ -->
-      <g opacity="0.065" stroke="#c9a84c" stroke-width="0.8" fill="none">
-        <circle cx="500" cy="220" r="80"/>
-        <circle cx="500" cy="140" r="80"/>
-        <circle cx="569" cy="180" r="80"/>
-        <circle cx="569" cy="260" r="80"/>
-        <circle cx="500" cy="300" r="80"/>
-        <circle cx="431" cy="260" r="80"/>
-        <circle cx="431" cy="180" r="80"/>
-        <circle cx="500" cy="60"  r="80"/>
-        <circle cx="638" cy="140" r="80"/>
-        <circle cx="638" cy="300" r="80"/>
-        <circle cx="500" cy="380" r="80"/>
-        <circle cx="362" cy="300" r="80"/>
-        <circle cx="362" cy="140" r="80"/>
-        <circle cx="500" cy="220" r="160"/>
-      </g>
+      <rect x="0" y="0" width="1000" height="860" fill="rgba(8,6,4,0.96)"/>
       <!-- Star of David / Hexagram -->
       <g opacity="0.055" stroke="#c9a84c" stroke-width="1" fill="none">
         <polygon points="500,70 638,305 362,305"/>
@@ -372,37 +334,6 @@
 
       <!-- Vertical axis -->
       <line x1="500" y1="0" x2="500" y2="860" stroke="rgba(201,168,76,0.04)" stroke-width="1" stroke-dasharray="4,12"/>
-
-      <!-- ══ BOAZ — LEFT PILLAR (Dark / Strength) ══ -->
-      <rect x="28" y="110" width="44" height="555" fill="url(#pillarBlack)" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
-      <line x1="38" y1="110" x2="38" y2="665" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
-      <line x1="47" y1="110" x2="47" y2="665" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
-      <line x1="56" y1="110" x2="56" y2="665" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
-      <line x1="63" y1="110" x2="63" y2="665" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
-      <rect x="20" y="660" width="60" height="16" rx="2" fill="url(#pillarBlack)" stroke="rgba(201,168,76,0.35)" stroke-width="1"/>
-      <rect x="14" y="673" width="72" height="10" rx="2" fill="url(#pillarBlack)" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
-      <rect x="20" y="96"  width="60" height="16" rx="2" fill="url(#pillarBlack)" stroke="rgba(201,168,76,0.35)" stroke-width="1"/>
-      <rect x="14" y="84"  width="72" height="14" rx="2" fill="url(#pillarBlack)" stroke="rgba(201,168,76,0.25)" stroke-width="1"/>
-      <circle cx="50" cy="66" r="16" fill="rgba(20,15,10,0.9)" stroke="rgba(201,168,76,0.5)" stroke-width="1.5"/>
-      <ellipse cx="50" cy="66" rx="16" ry="5" fill="none" stroke="rgba(201,168,76,0.3)" stroke-width="0.8"/>
-      <line x1="50" y1="50" x2="50" y2="82" stroke="rgba(201,168,76,0.3)" stroke-width="0.8"/>
-      <text x="50" y="102" text-anchor="middle" fill="rgba(201,168,76,0.55)" font-family="Cinzel, serif" font-size="7" letter-spacing="2">BOAZ</text>
-      
-
-      <!-- ══ JACHIN — RIGHT PILLAR (Light / Establishment) ══ -->
-      <rect x="928" y="110" width="44" height="555" fill="url(#pillarWhite)" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
-      <line x1="937" y1="110" x2="937" y2="665" stroke="rgba(255,255,255,0.09)" stroke-width="1"/>
-      <line x1="946" y1="110" x2="946" y2="665" stroke="rgba(255,255,255,0.09)" stroke-width="1"/>
-      <line x1="955" y1="110" x2="955" y2="665" stroke="rgba(255,255,255,0.09)" stroke-width="1"/>
-      <line x1="963" y1="110" x2="963" y2="665" stroke="rgba(255,255,255,0.09)" stroke-width="1"/>
-      <rect x="920" y="660" width="60" height="16" rx="2" fill="url(#pillarWhite)" stroke="rgba(201,168,76,0.35)" stroke-width="1"/>
-      <rect x="914" y="673" width="72" height="10" rx="2" fill="url(#pillarWhite)" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
-      <rect x="920" y="96"  width="60" height="16" rx="2" fill="url(#pillarWhite)" stroke="rgba(201,168,76,0.35)" stroke-width="1"/>
-      <rect x="914" y="84"  width="72" height="14" rx="2" fill="url(#pillarWhite)" stroke="rgba(201,168,76,0.25)" stroke-width="1"/>
-      <circle cx="950" cy="66" r="16" fill="rgba(200,185,150,0.35)" stroke="rgba(201,168,76,0.5)" stroke-width="1.5"/>
-      <ellipse cx="950" cy="66" rx="16" ry="5" fill="none" stroke="rgba(201,168,76,0.3)" stroke-width="0.8"/>
-      <line x1="950" y1="50" x2="950" y2="82" stroke="rgba(201,168,76,0.3)" stroke-width="0.8"/>
-      <text x="950" y="102" text-anchor="middle" fill="#3a2e10" font-family="Cinzel, serif" font-size="7" letter-spacing="2" font-weight="600">JACHIN</text>
       <text transform="rotate(90,984,390)" x="984" y="-606" text-anchor="middle" fill="rgba(201,168,76,0.18)" font-family="Cinzel, serif" font-size="7" letter-spacing="2">ESTABLISHMENT</text>
 
       <!-- Mosaic floor suggestion at base -->
@@ -431,30 +362,6 @@
 
       <!-- ══ EYE OF PROVIDENCE ══ -->
       <!-- Triangle -->
-      <polygon points="500,10 554,96 446,96" fill="rgba(10,8,4,0.88)" stroke="#c9a84c" stroke-width="1.5" filter="url(#eyeglow)"/>
-      <polygon points="500,10 554,96 446,96" fill="none" stroke="rgba(255,240,160,0.18)" stroke-width="3.5"/>
-      <!-- Rays -->
-      <g stroke="rgba(201,168,76,0.22)" stroke-width="0.8">
-        <line x1="500" y1="10" x2="500" y2="0"/>
-        <line x1="554" y1="96" x2="566" y2="108"/>
-        <line x1="446" y1="96" x2="434" y2="108"/>
-        <line x1="472" y1="24" x2="460" y2="12"/>
-        <line x1="528" y1="24" x2="540" y2="12"/>
-        <line x1="544" y1="60" x2="558" y2="56"/>
-        <line x1="456" y1="60" x2="442" y2="56"/>
-        <line x1="518" y1="88" x2="524" y2="102"/>
-        <line x1="482" y1="88" x2="476" y2="102"/>
-        <line x1="500" y1="96" x2="500" y2="110"/>
-      </g>
-      <!-- Eye -->
-      <ellipse cx="500" cy="58" rx="27" ry="17" fill="rgba(240,225,180,0.12)" stroke="rgba(201,168,76,0.7)" stroke-width="1"/>
-      <circle cx="500" cy="58" r="11" fill="rgba(201,168,76,0.28)" stroke="rgba(201,168,76,0.85)" stroke-width="1"/>
-      <circle cx="500" cy="58" r="5.5" fill="rgba(255,230,100,0.92)" filter="url(#glow)"/>
-      <circle cx="497" cy="55" r="2" fill="rgba(255,255,255,0.7)"/>
-      <path d="M 473,58 Q 500,40 527,58" fill="none" stroke="rgba(201,168,76,0.55)" stroke-width="1"/>
-      <path d="M 473,58 Q 500,74 527,58" fill="none" stroke="rgba(201,168,76,0.55)" stroke-width="1"/>
-      <!-- Motto -->
-      <text x="500" y="8" text-anchor="middle" fill="rgba(201,168,76,0.45)" font-family="Cinzel, serif" font-size="9" letter-spacing="2">DEUS MEUMQUE JUS</text>
 
       <!-- ══ FULCRUM ══ -->
       <rect x="462" y="98" width="76" height="14" rx="2" fill="url(#barGrad)" opacity="0.9"/>
@@ -594,30 +501,6 @@
       <text x="130" y="734" text-anchor="middle" fill="rgba(201,168,76,0.38)" font-family="EB Garamond, serif" font-size="8" font-style="italic">survives</text>
       <text x="500" y="640" text-anchor="middle" fill="rgba(240,210,100,0.72)" font-family="EB Garamond, serif" font-size="8.5" font-style="italic">thrives</text>
       <text x="870" y="734" text-anchor="middle" fill="rgba(201,168,76,0.38)" font-family="EB Garamond, serif" font-size="8" font-style="italic">survives</text>
-
-      <!-- ══ INVERTED TRIANGLE — mirror of Eye of Providence ══ -->
-      <polygon points="500,848 554,762 446,762" fill="rgba(10,8,4,0.88)" stroke="#c9a84c" stroke-width="1.5" filter="url(#eyeglow)"/>
-      <polygon points="500,848 554,762 446,762" fill="none" stroke="rgba(255,240,160,0.18)" stroke-width="3.5"/>
-      <g stroke="rgba(201,168,76,0.22)" stroke-width="0.8">
-        <line x1="500" y1="848" x2="500" y2="858"/>
-        <line x1="554" y1="762" x2="566" y2="750"/>
-        <line x1="446" y1="762" x2="434" y2="750"/>
-        <line x1="472" y1="834" x2="460" y2="846"/>
-        <line x1="528" y1="834" x2="540" y2="846"/>
-        <line x1="544" y1="798" x2="558" y2="802"/>
-        <line x1="456" y1="798" x2="442" y2="802"/>
-        <line x1="518" y1="770" x2="524" y2="756"/>
-        <line x1="482" y1="770" x2="476" y2="756"/>
-        <line x1="500" y1="762" x2="500" y2="748"/>
-      </g>
-      <ellipse cx="500" cy="800" rx="27" ry="17" fill="rgba(10,5,2,0.7)" stroke="rgba(201,168,76,0.7)" stroke-width="1"/>
-      <circle cx="500" cy="800" r="11" fill="rgba(80,20,10,0.7)" stroke="rgba(201,168,76,0.85)" stroke-width="1"/>
-      <circle cx="500" cy="800" r="5.5" fill="rgba(180,30,10,0.88)" filter="url(#glow)"/>
-      <circle cx="503" cy="797" r="2" fill="rgba(255,100,60,0.7)"/>
-      <ellipse cx="500" cy="800" rx="1.5" ry="5" fill="rgba(10,2,2,0.95)"/>
-      <path d="M 473,800 Q 500,782 527,800" fill="none" stroke="rgba(201,168,76,0.55)" stroke-width="1"/>
-      <path d="M 473,800 Q 500,816 527,800" fill="none" stroke="rgba(201,168,76,0.55)" stroke-width="1"/>
-      <text x="500" y="756" text-anchor="middle" fill="rgba(201,168,76,0.45)" font-family="Cinzel, serif" font-size="9" letter-spacing="2">ORDO AB CHAO</text>
 
 
       <!-- Great Axis bracket -->
